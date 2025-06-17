@@ -20,7 +20,7 @@ export async function searchBooks(req: Request, res: Response) {
       throw new Error("Failed to fetch from Google Books API");
     }
 
-    const data = await response.json(); // ✅ parse the actual JSON data
+    const data = await response.json();
     res.json(data);
   } catch (err) {
     console.error(err);
