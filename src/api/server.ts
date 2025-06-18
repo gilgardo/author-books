@@ -2,12 +2,13 @@ import express from "express";
 import { router as booksRouter } from "./routes/books.ts";
 import type { Request, Response } from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 
-const app = express();
 dotenv.config();
-
+const app = express();
+app.use(cors());
 app.use(express.json());
-app.use("/api/books", booksRouter);
+app.use("/api/books/search", booksRouter);
 
 app.use((err: Error, _: Request, res: Response) => {
   console.error(err.stack);
