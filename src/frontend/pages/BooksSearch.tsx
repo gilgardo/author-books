@@ -1,22 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { BASE_URL } from "../../data";
 import { useEffect, useState } from "react";
-import type { Volume } from "../../types/googleApi";
 import SearchBooksDisplayer from "../components/SearchBooksDisplayer";
-import { maxResults } from "../../data/maxResults.ts";
 import CustomButton from "../components/CustomButton.tsx";
-
-const searchBooks = async (query: string, page: number) => {
-  const res = await fetch(
-    `${BASE_URL}/books/search?q=${encodeURIComponent(query)}&startIndex=${
-      page * maxResults
-    }`
-  );
-  if (!res.ok) throw new Error("bad request");
-  const data = await res.json();
-  return data as Volume[];
-};
+import { useBooksSearch } from "../useQueryCustomHooks/useBooksSearch.tsx";
 
 const BooksSearch = () => {
   const [searchParams] = useSearchParams();
@@ -28,13 +14,7 @@ const BooksSearch = () => {
     setPage(0);
   }, [query]);
 
-  const queryResult = useQuery({
-    queryKey: ["books/search", query, page],
-    queryFn: () => searchBooks(query, page),
-    enabled: query !== "",
-    staleTime: 10 * 1000,
-    placeholderData: (previousData) => previousData,
-  });
+  const queryResult = useBooksSearch(query, page);
 
   return (
     <div className="md:ml-100 px-10 py-8 flex flex-col justify-end">

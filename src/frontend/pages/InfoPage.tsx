@@ -1,7 +1,7 @@
 const InfoPage = () => {
   return (
     <main className="w-full h-full bg-green/50">
-      <section className="max-w-4xl mx-auto w-full py-10 px-6 h-full bg-ligth">
+      <section className="max-w-4xl  mx-auto w-full py-10 px-6 h-full bg-ligth">
         <h1 className="text-3xl font-bold mb-6">📚 About This Project</h1>
 
         <p className="mb-4 text-lg">
