@@ -26,7 +26,15 @@ const NavSearch = () => {
         tabIndex={-1}>
         {isActive && (
           <div className="relative">
-            <MagnifyingGlassIcon className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-dark" />
+            <MagnifyingGlassIcon
+              onClick={() => {
+                if (search !== "") {
+                  navigate(`/books/search?q=${encodeURIComponent(search)}`);
+                  setSearch("");
+                }
+              }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-dark cursor-pointer"
+            />
             <input
               ref={inputRef}
               type="text"
