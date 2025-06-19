@@ -4,11 +4,16 @@ import { BASE_URL } from "../../data";
 import type { Volume } from "../../types/googleApi";
 import { useEffect } from "react";
 
-const searchBooks = async (query: string, page: number) => {
+const searchBooks = async (
+  query: string,
+  page: number,
+  signal: AbortSignal
+) => {
   const res = await fetch(
     `${BASE_URL}/books/search?q=${encodeURIComponent(query)}&startIndex=${
       page * maxResults
-    }`
+    }`,
+    { signal }
   );
   if (!res.ok) throw new Error("bad request");
   const data = await res.json();
@@ -17,8 +22,8 @@ const searchBooks = async (query: string, page: number) => {
 
 export function getBooksSearchQueryOptions(query: string, page: number) {
   return queryOptions({
-    queryKey: ["books/search", query, page],
-    queryFn: () => searchBooks(query, page),
+    queryKey: ["books", "search", { query, page }],
+    queryFn: ({ signal }) => searchBooks(query, page, signal),
     enabled: query !== "",
     staleTime: 60 * 1000,
   });

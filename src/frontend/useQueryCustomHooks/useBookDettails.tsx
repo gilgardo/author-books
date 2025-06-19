@@ -4,7 +4,7 @@ import type { Volume } from "../../types/googleApi";
 import { getBooksSearchQueryOptions } from "./useBooksSearch";
 
 const searchBook = async (id: string) => {
-  const res = await fetch(`${BASE_URL}/book/?id=${encodeURIComponent(id)}`);
+  const res = await fetch(`${BASE_URL}/book?id=${encodeURIComponent(id)}`);
   if (!res.ok) throw new Error("bad request");
   const data = await res.json();
   return data as Volume;
