@@ -79,7 +79,11 @@ const NavSearch = () => {
               key={book.id}
               className="py-1 px-2 rounded-md hover:bg-green/40 cursor-pointer flex justify-start items-center gap-3"
               onClick={() => {
-                navigate(`/books/${book.id}`);
+                navigate(
+                  `/book?id=${encodeURIComponent(
+                    book.id
+                  )}&q=${encodeURIComponent(debouncedSearch)}`
+                );
                 setSearch("");
                 toggle(setIsActive)();
               }}>

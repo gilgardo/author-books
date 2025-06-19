@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import SearchBooksDisplayer from "../components/SearchBooksDisplayer";
 import CustomButton from "../components/CustomButton.tsx";
@@ -6,8 +6,9 @@ import { useBooksSearch } from "../useQueryCustomHooks/useBooksSearch.tsx";
 
 const BooksSearch = () => {
   const [searchParams] = useSearchParams();
-  const [page, setPage] = useState(0);
   const query = searchParams.get("q") || "";
+  const [page, setPage] = useState(0);
+  const navigate = useNavigate();
   const maxPages = 5;
 
   useEffect(() => {
@@ -16,13 +17,23 @@ const BooksSearch = () => {
 
   const queryResult = useBooksSearch(query, page);
 
+  const handleClick = (id: string) =>
+    navigate(
+      `/book?id=${encodeURIComponent(id)}&q=${encodeURIComponent(
+        query
+      )}&page=${encodeURIComponent(page)}`
+    );
+
   return (
     <div className="md:ml-100 px-10 py-8 flex flex-col justify-end">
       <h2 className="text-dark text-xl md:text-2xl">
         Search results for <span className="font-bold text-green">{query}</span>
         :
       </h2>
-      <SearchBooksDisplayer queryResult={queryResult} />
+      <SearchBooksDisplayer
+        queryResult={queryResult}
+        handleClick={handleClick}
+      />
       <div
         className="flex justify-end
        items-center mt-4 gap-6">

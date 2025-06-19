@@ -4,8 +4,10 @@ import BooksSearchLoader from "../loaders/BooksSearchLoader";
 
 const SearchBooksDisplayer = ({
   queryResult,
+  handleClick,
 }: {
   queryResult: UseQueryResult<Volume[]>;
+  handleClick: (id: string) => void;
 }) => {
   const { data: books, isError, isPending, isPlaceholderData } = queryResult;
 
@@ -23,12 +25,13 @@ const SearchBooksDisplayer = ({
       {books.map((book) => (
         <div
           key={book.id}
+          onClick={() => handleClick(book.id)}
           className={`${
-            isPlaceholderData ? "bg-green/40" : "bg-green/80"
-          } shadow-md rounded-2xl overflow-hidden transition-transform hover:scale-105 hover:shadow-xl duration-200 flex flex-col justify-between p-4 min-h-[320px]`}>
+            isPlaceholderData ? "bg-green/40" : "bg-green/80 hover:bg-green"
+          } shadow-md rounded-2xl overflow-hidden transition-transform hover:shadow-2xl hover:scale-95 duration-200 flex flex-col justify-between p-4 cursor-pointer`}>
           <div className="flex flex-col items-center text-center">
             <img
-              className="h-48 w-40 object-cover rounded-md mb-3"
+              className="h-60 w-40 object-cover rounded-md mb-3"
               src={book.volumeInfo.imageLinks?.thumbnail || ""}
               alt={book.volumeInfo.title}
             />

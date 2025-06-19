@@ -1,7 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import { queryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
 import { maxResults } from "../../data/maxResults";
 import { BASE_URL } from "../../data";
 import type { Volume } from "../../types/googleApi";
+import { useEffect } from "react";
 
 const searchBooks = async (query: string, page: number) => {
   const res = await fetch(
@@ -14,12 +15,24 @@ const searchBooks = async (query: string, page: number) => {
   return data as Volume[];
 };
 
-export const useBooksSearch = (query: string, page: number) => {
-  return useQuery({
+export function getBooksSearchQueryOptions(query: string, page: number) {
+  return queryOptions({
     queryKey: ["books/search", query, page],
     queryFn: () => searchBooks(query, page),
     enabled: query !== "",
-    staleTime: 10 * 1000,
+    staleTime: 60 * 1000,
+  });
+}
+
+export const useBooksSearch = (query: string, page: number) => {
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    queryClient.prefetchQuery(getBooksSearchQueryOptions(query, page + 1));
+  }, [queryClient, query, page]);
+
+  return useQuery({
+    ...getBooksSearchQueryOptions(query, page),
     placeholderData: (previousData) => previousData,
   });
 };
