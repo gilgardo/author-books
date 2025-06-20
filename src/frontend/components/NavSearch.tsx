@@ -19,8 +19,6 @@ const NavSearch = () => {
       inputRef.current.focus();
     }
   }, [isActive]);
-
-  console.log(books);
   return (
     <div className="relative h-auto z-50">
       <div

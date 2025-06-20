@@ -26,7 +26,7 @@ export async function searchBook(req: Request, res: Response) {
     }
 
     const data = await response.json();
-    res.json(data.items);
+    res.json(data);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch book" });

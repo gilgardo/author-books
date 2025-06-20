@@ -25,7 +25,7 @@ const BooksSearch = () => {
     );
 
   return (
-    <div className="md:ml-100 px-10 py-8 flex flex-col justify-end">
+    <>
       <h2 className="text-dark text-xl md:text-2xl">
         Search results for <span className="font-bold text-green">{query}</span>
         :
@@ -46,7 +46,7 @@ const BooksSearch = () => {
           NEXT
         </CustomButton>
       </div>
-    </div>
+    </>
   );
 };
 

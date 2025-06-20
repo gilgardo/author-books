@@ -10,7 +10,7 @@ const searchBook = async (id: string) => {
   return data as Volume;
 };
 
-export function getBookDettailsQueryOptions(id: string) {
+export function getBookDetailsQueryOptions(id: string) {
   return queryOptions({
     queryKey: ["book", { id }],
     queryFn: () => searchBook(id),
@@ -18,11 +18,11 @@ export function getBookDettailsQueryOptions(id: string) {
   });
 }
 
-export const useBooksDettails = (id: string, query = "", page = 0) => {
+export const useBookDetails = (id: string, query = "", page = 0) => {
   const queryClient = useQueryClient();
 
   return useQuery({
-    ...getBookDettailsQueryOptions(id),
+    ...getBookDetailsQueryOptions(id),
     initialData: () => {
       if (query === "") return undefined;
       return queryClient

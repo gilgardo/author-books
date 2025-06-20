@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import dotenv from "dotenv";
 import { maxResults } from "../../data/maxResults.ts";
+import type { Volume } from "../../types/googleApi.tsx";
 
 dotenv.config();
 const BASE_URL = "https://www.googleapis.com/books/v1/volumes";
@@ -26,9 +27,11 @@ export async function searchBooks(req: Request, res: Response) {
         `Failed to fetch from Google Books API: ${response.status} ${response.statusText} - ${text}`
       );
     }
-
     const data = await response.json();
-    res.json(data.items);
+
+    const items: Volume[] = data.items;
+    const books = items.filter((item) => item.volumeInfo.printType === "BOOK");
+    res.json(books);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch books" });

@@ -5,7 +5,7 @@ const CustomButton = ({
 }: {
   children: React.ReactNode;
   disabled?: boolean;
-  onClick: (e?: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
 }) => {
   return (
     <button

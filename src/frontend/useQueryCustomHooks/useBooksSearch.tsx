@@ -33,7 +33,9 @@ export const useBooksSearch = (query: string, page: number) => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    queryClient.prefetchQuery(getBooksSearchQueryOptions(query, page + 1));
+    if (query !== "") {
+      queryClient.prefetchQuery(getBooksSearchQueryOptions(query, page + 1));
+    }
   }, [queryClient, query, page]);
 
   return useQuery({
