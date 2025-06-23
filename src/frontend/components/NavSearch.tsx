@@ -4,21 +4,97 @@ import { useDebounce } from "@uidotdev/usehooks";
 import { toggle } from "../../utils/toggleBolean";
 import { useNavigate } from "react-router-dom";
 import { useBooksSearch } from "../useQueryCustomHooks/useBooksSearch";
+import { generateNavigateToParams } from "../../utils/navigateToParams";
+import type { BookDetailsParams, BooksSearchParams } from "../../types/params";
 
 const NavSearch = () => {
   const [isActive, setIsActive] = useState(false);
   const [search, setSearch] = useState("");
+  const [focusIndex, setFocusIndex] = useState(0);
   const debouncedSearch = useDebounce(search, 300);
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const searchRef = useRef(null);
+  const suggestionsListRef = useRef<HTMLUListElement>(null);
+
   const navigate = useNavigate();
+  const navigateToBookSearch: (
+    params: BooksSearchParams,
+    condiction?: boolean
+  ) => void = generateNavigateToParams(navigate, "/books/search", {
+    shouldNavigate: search !== "",
+    onAfterNavigate: () => setSearch(""),
+  });
+  const navigateToBookDetails: (params: BookDetailsParams) => void =
+    generateNavigateToParams(navigate, "/book", {
+      onAfterNavigate: () => setSearch(""),
+    });
 
   const { data: books } = useBooksSearch(debouncedSearch, 0);
+  const suggestionListData = books?.slice(0, 5);
+  const isSuggestionListOpen =
+    isActive && books && books.length > 0 && debouncedSearch.length > 3;
 
   useEffect(() => {
-    if (isActive && inputRef.current) {
-      inputRef.current.focus();
+    console.log(focusIndex);
+    if (!isActive || !isSuggestionListOpen) {
+      return;
     }
-  }, [isActive]);
+    if (focusIndex === 0) {
+      inputRef.current?.focus();
+      return;
+    }
+    const nextSuggestion = suggestionsListRef.current?.children.item(
+      focusIndex - 1
+    ) as HTMLElement;
+    nextSuggestion.focus();
+  }, [isActive, focusIndex, isSuggestionListOpen]);
+
+  const handleBlur = (e: React.FocusEvent) => {
+    const relatedTarget = e.relatedTarget;
+    if (
+      relatedTarget !== inputRef.current &&
+      relatedTarget !== searchRef.current &&
+      !suggestionsListRef.current?.contains(relatedTarget)
+    ) {
+      toggle(setIsActive)();
+      setSearch("");
+    }
+  };
+
+  const handleSuggestionListKeyDown = (
+    e: React.KeyboardEvent,
+    maxLength: number,
+    enterFn: () => void,
+    shouldExecute: boolean | undefined
+  ) => {
+    const events = ["Enter", "Tab", "ArrowDown", "ArrowUp"];
+
+    if (!events.includes(e.key)) return;
+
+    if (e.key === "Enter") {
+      enterFn();
+    }
+    if (!shouldExecute) return;
+    e.preventDefault();
+
+    const incrementFocus = (inc: number) => {
+      setFocusIndex((prevIndex) => {
+        if (prevIndex === maxLength) return 0;
+        if (prevIndex + inc === 0) return maxLength;
+        return prevIndex + inc;
+      });
+    };
+    if (e.key === "Tab") {
+      incrementFocus(1);
+    }
+    if (e.key === "ArrowDown") {
+      incrementFocus(1);
+    }
+    if (e.key === "ArrowUp") {
+      incrementFocus(-1);
+    }
+  };
+
   return (
     <div className="relative h-auto z-50">
       <div
@@ -29,33 +105,29 @@ const NavSearch = () => {
         {isActive && (
           <div className="relative w-full">
             <MagnifyingGlassIcon
-              onClick={() => {
-                if (search !== "") {
-                  navigate(`/books/search?q=${encodeURIComponent(search)}`);
-                  setSearch("");
-                }
-              }}
-              className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-dark cursor-pointer z-10"
+              tabIndex={0}
+              onClick={() => navigateToBookSearch({ q: search })}
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-dark cursor-pointer z-10 focus:outline-none"
+              ref={searchRef}
             />
+
             <input
               ref={inputRef}
               type="text"
               value={search}
+              onMouseEnter={() => setFocusIndex(0)}
+              onBlur={handleBlur}
               onChange={(e) => setSearch(e.target.value)}
-              onBlur={() => {
-                setTimeout(() => {
-                  toggle(setIsActive)();
-                  setSearch("");
-                }, 300);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && search !== "") {
-                  navigate(`/books/search?q=${encodeURIComponent(search)}`);
-                  setSearch("");
-                }
-              }}
+              onKeyDown={(e) =>
+                handleSuggestionListKeyDown(
+                  e,
+                  suggestionListData?.length ?? 0 + 1,
+                  () => navigateToBookSearch({ q: search }),
+                  isSuggestionListOpen
+                )
+              }
               placeholder="Search..."
-              className="bg-transparent pl-3 pr-7 py-1 text-sm outline-none w-full animate-fadeIn"
+              className="bg-transparent pl-3 pr-7 py-1 text-sm outline-none focus:ring-2 focus:ring-black rounded-full w-full animate-fadeIn"
             />
           </div>
         )}
@@ -69,28 +141,41 @@ const NavSearch = () => {
           </button>
         )}
       </div>
-
-      {isActive && books && books.length > 0 && debouncedSearch.length > 3 && (
-        <ul className="absolute top-10 left-0 w-65 bg-white rounded-md shadow-lg z-50 max-h-60 overflow-y-auto p-2">
-          {books.slice(0, 5).map((book) => (
+      {isSuggestionListOpen && (
+        <ul
+          ref={suggestionsListRef}
+          onBlur={handleBlur}
+          className="absolute top-10 left-0 w-65 bg-white rounded-md shadow-lg z-50 max-h-60 overflow-y-auto p-2">
+          {suggestionListData?.map((book, index) => (
             <li
               key={book.id}
-              className="py-1 px-2 rounded-md hover:bg-green/40 cursor-pointer flex justify-start items-center gap-3"
-              onClick={() => {
-                navigate(
-                  `/book?id=${encodeURIComponent(
-                    book.id
-                  )}&q=${encodeURIComponent(debouncedSearch)}`
-                );
-                setSearch("");
-                toggle(setIsActive)();
-              }}>
+              className="py-1 px-2 cursor-pointer rounded-md outline-none focus:bg-green/40 flex items-start gap-3"
+              tabIndex={0}
+              onClick={() =>
+                navigateToBookDetails({
+                  id: book.id,
+                  q: search,
+                })
+              }
+              onKeyDown={(e) =>
+                handleSuggestionListKeyDown(
+                  e,
+                  suggestionListData?.length ?? 0 + 1,
+                  () =>
+                    navigateToBookDetails({
+                      id: book.id,
+                      q: search,
+                    }),
+                  isSuggestionListOpen
+                )
+              }
+              onMouseEnter={() => setFocusIndex(index + 1)}>
               <img
                 src={book.volumeInfo.imageLinks?.smallThumbnail || ""}
                 alt={book.volumeInfo.title}
-                className="h-full w-6 rounded-md"
+                className="h-10 w-6 rounded-md object-cover shrink-0"
               />
-              <span className="text-sm text-dark font-bold">
+              <span className="line-clamp-2 text-sm font-bold text-dark max-w-[12rem]">
                 {book.volumeInfo.title}
               </span>
             </li>
