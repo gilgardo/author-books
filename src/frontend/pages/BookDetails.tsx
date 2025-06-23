@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { useBookDetails } from "../useQueryCustomHooks/useBookDetails";
 import CustomButton from "../components/CustomButton";
+import BookDetailLoader from "../loaders/BookDetailLoader";
 
 const BookDetails = () => {
   const [searchParams] = useSearchParams();
@@ -15,7 +16,7 @@ const BookDetails = () => {
     error,
   } = useBookDetails(id, query, Number(page));
 
-  if (isPending) return <div className="p-6">Loading...</div>;
+  if (isPending) return <BookDetailLoader />;
   if (isError) {
     console.error("Book fetch error:", error);
     return <div className="p-6 text-red-500">Error loading book</div>;

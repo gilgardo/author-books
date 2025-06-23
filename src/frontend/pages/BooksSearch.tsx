@@ -1,19 +1,14 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import SearchBooksDisplayer from "../components/SearchBooksDisplayer";
 import CustomButton from "../components/CustomButton.tsx";
 import { useBooksSearch } from "../useQueryCustomHooks/useBooksSearch.tsx";
 
 const BooksSearch = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
-  const [page, setPage] = useState(0);
+  const page = Number(searchParams.get("page") || 0);
   const navigate = useNavigate();
   const maxPages = 5;
-
-  useEffect(() => {
-    setPage(0);
-  }, [query]);
 
   const queryResult = useBooksSearch(query, page);
 
@@ -37,12 +32,24 @@ const BooksSearch = () => {
       <div
         className="flex justify-end
        items-center mt-4 gap-6">
-        <CustomButton disabled={page === 0} onClick={() => setPage(page - 1)}>
+        <CustomButton
+          disabled={page === 0}
+          onClick={() =>
+            setSearchParams((params) => {
+              params.set("page", (page - 1).toString());
+              return params;
+            })
+          }>
           PREV
         </CustomButton>
         <CustomButton
           disabled={page === maxPages}
-          onClick={() => setPage(page + 1)}>
+          onClick={() =>
+            setSearchParams((params) => {
+              params.set("page", (page + 1).toString());
+              return params;
+            })
+          }>
           NEXT
         </CustomButton>
       </div>

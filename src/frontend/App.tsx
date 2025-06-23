@@ -2,12 +2,11 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home";
 import BooksSearch from "./pages/BooksSearch";
 import BookDetails from "./pages/BookDetails";
-import Info from "./pages/InfoPage";
+import Info from "./pages/Info";
 import MainLayout from "./layouts/MainLayout";
 
 const router = createBrowserRouter([
   {
-    // Public layout (e.g., Home, Search, BookDetails)
     element: <MainLayout />,
     children: [
       { path: "/", element: <Home /> },
