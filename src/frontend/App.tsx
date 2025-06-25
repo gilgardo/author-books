@@ -4,6 +4,7 @@ import BooksSearch from "./pages/BooksSearch";
 import BookDetails from "./pages/BookDetails";
 import Info from "./pages/Info";
 import MainLayout from "./layouts/MainLayout";
+import BookViewer from "./pages/Bookviewer";
 
 const router = createBrowserRouter([
   {
@@ -12,6 +13,7 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "books/search", element: <BooksSearch /> },
       { path: "book", element: <BookDetails /> },
+      { path: "book/:id/view", element: <BookViewer /> },
       { path: "info", element: <Info /> },
     ],
   },

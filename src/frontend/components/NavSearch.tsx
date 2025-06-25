@@ -2,10 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { useDebounce } from "@uidotdev/usehooks";
 import { toggle } from "../../utils/toggleBolean";
-import { useNavigate } from "react-router-dom";
 import { useBooksSearch } from "../useQueryCustomHooks/useBooksSearch";
-import { generateNavigateToParams } from "../../utils/navigateToParams";
 import type { BookDetailsParams, BooksSearchParams } from "../../types/params";
+import { useNavigateToParams } from "../customHooks/useNavigateToParams";
 
 const NavSearch = () => {
   const [isActive, setIsActive] = useState(false);
@@ -16,16 +15,13 @@ const NavSearch = () => {
   const searchRef = useRef(null);
   const suggestionsListRef = useRef<HTMLUListElement>(null);
 
-  const navigate = useNavigate();
-  const navigateToBookSearch: (
-    params: BooksSearchParams,
-    condiction?: boolean
-  ) => void = generateNavigateToParams(navigate, "/books/search", {
-    shouldNavigate: search !== "",
-    onAfterNavigate: () => setSearch(""),
-  });
+  const navigateToBookSearch: (params: BooksSearchParams) => void =
+    useNavigateToParams("/books/search", {
+      shouldNavigate: search !== "",
+      onAfterNavigate: () => setSearch(""),
+    });
   const navigateToBookDetails: (params: BookDetailsParams) => void =
-    generateNavigateToParams(navigate, "/book", {
+    useNavigateToParams("/book", {
       onAfterNavigate: () => setSearch(""),
     });
 
@@ -35,7 +31,6 @@ const NavSearch = () => {
     isActive && books && books.length > 0 && debouncedSearch.length > 3;
 
   useEffect(() => {
-    console.log(focusIndex);
     if (!isActive || !isSuggestionListOpen) {
       return;
     }
