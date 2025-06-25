@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useBookDetails } from "../useQueryCustomHooks/useBookDetails";
 import CustomButton from "../components/CustomButton";
 import BookDetailLoader from "../loaders/BookDetailLoader";
@@ -8,7 +8,7 @@ const BookDetails = () => {
   const id = searchParams.get("id") || "";
   const query = searchParams.get("q") || "";
   const page = searchParams.get("page") || "";
-
+  const navigate = useNavigate();
   const {
     data: book,
     isError,
@@ -103,14 +103,8 @@ const BookDetails = () => {
             <div className="pt-2 flex flex-col gap-2">
               <h2 className="text-xl font-bold">Useful Links</h2>
               {previewLink && (
-                <CustomButton>
-                  <a
-                    href={previewLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm">
-                    Preview this book
-                  </a>
+                <CustomButton onClick={() => navigate(`/book/${book.id}/view`)}>
+                  Preview this book
                 </CustomButton>
               )}
               {infoLink && (

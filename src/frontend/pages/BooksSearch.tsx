@@ -1,23 +1,20 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import SearchBooksDisplayer from "../components/SearchBooksDisplayer";
 import CustomButton from "../components/CustomButton.tsx";
 import { useBooksSearch } from "../useQueryCustomHooks/useBooksSearch.tsx";
+import { useNavigateToParams } from "../customHooks/useNavigateToParams.ts";
 
 const BooksSearch = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
   const page = Number(searchParams.get("page") || 0);
-  const navigate = useNavigate();
+  const navigateToBookDetails = useNavigateToParams("/book");
   const maxPages = 5;
 
   const queryResult = useBooksSearch(query, page);
 
   const handleClick = (id: string) =>
-    navigate(
-      `/book?id=${encodeURIComponent(id)}&q=${encodeURIComponent(
-        query
-      )}&page=${encodeURIComponent(page)}`
-    );
+    navigateToBookDetails({ id, q: query, page: page.toString() });
 
   return (
     <>
