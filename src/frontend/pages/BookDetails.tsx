@@ -42,16 +42,14 @@ const BookDetails = () => {
       </h1>
 
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Left Column */}
         <div className="flex flex-col items-center lg:items-start">
           <img
-            src={imageLinks?.thumbnail || ""}
+            src={imageLinks?.thumbnail || "/default_book_cover.jpg"}
             alt={title}
             className="w-90 h-140 object-cover rounded-md shadow-md mb-4"
           />
         </div>
 
-        {/* Right Column */}
         <div className="flex-1 space-y-4 text-dark">
           {description && (
             <>

@@ -21,7 +21,7 @@ declare global {
       books: {
         load: () => void;
         setOnLoadCallback: (callback: () => void) => void;
-        Viewer: new (element: HTMLElement | null) => GoogleBooksViewer; // or GoogleBooksViewer if you want to import it
+        Viewer: new (element: HTMLElement | null) => GoogleBooksViewer;
       };
     };
   }
