@@ -39,31 +39,31 @@ const BookViewer = () => {
   if (!id) return <div>Error</div>;
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center sm:flex-row flex-col">
       {viewer && isLoaded && (
-        <div className="flex flex-col justify-start items-start gap-10 rounded-l-md  bg-green/80 p-3">
+        <div className="flex sm:flex-col sm:justify-start justify-between items-start gap-10 rounded-t-md sm:rounded-l-md sm:rounded-t-none sm:bg-green/80 p-3">
           <ForwardIcon
-            className="text-light cursor-pointer size-7"
+            className="sm:text-light text-green/80 cursor-pointer size-7"
             onClick={() => handlePageChange(viewer.nextPage)}
           />
 
           <BackwardIcon
-            className="text-light cursor-pointer size-7"
+            className="sm:text-light text-green/80 cursor-pointer size-7"
             onClick={() => handlePageChange(viewer.previousPage)}
           />
 
           <MagnifyingGlassPlusIcon
-            className="text-light cursor-pointer size-7"
+            className="sm:text-light text-green/80 cursor-pointer size-7"
             onClick={viewer.zoomIn}
           />
 
           <MagnifyingGlassMinusIcon
-            className="text-light cursor-pointer size-7"
+            className="sm:text-light text-green/80 cursor-pointer size-7"
             onClick={viewer.zoomOut}
           />
         </div>
       )}
-      <div key={id} ref={viewerRef} className="h-250 w-[70%]" />
+      <div key={id} ref={viewerRef} className="h-250 sm:w-[70%] w-full" />
     </div>
   );
 };

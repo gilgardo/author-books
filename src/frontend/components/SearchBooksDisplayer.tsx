@@ -32,7 +32,10 @@ const SearchBooksDisplayer = ({
           <div className="flex flex-col items-center text-center">
             <img
               className="h-60 w-40 object-cover rounded-md mb-3"
-              src={book.volumeInfo.imageLinks?.thumbnail || ""}
+              src={
+                book.volumeInfo.imageLinks?.thumbnail ||
+                "/default_book_cover.jpg"
+              }
               alt={book.volumeInfo.title}
             />
             <h2 className="text-lg font-semibold text-gray-800 line-clamp-2">

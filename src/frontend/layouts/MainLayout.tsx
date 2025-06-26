@@ -5,7 +5,7 @@ const MainLayout = () => {
   return (
     <>
       <NavBar />
-      <main className="px-10 py-8 flex flex-col justify-end">
+      <main className="sm:px-10 px-3 py-8 flex flex-col justify-end">
         <Outlet />
       </main>
     </>

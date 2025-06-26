@@ -14,10 +14,7 @@ export interface GoogleBooksViewer {
   resize: () => void;
   highlight: (query: string) => void;
 }
-
-let scriptAdded = false;
-let isBooksApiReady = false;
-const callbacks: (() => void)[] = [];
+let isBooksApiLoaded = false;
 
 export const useGoogleBooks = (
   canvasRef: React.RefObject<HTMLDivElement | null>,
@@ -40,48 +37,15 @@ export const useGoogleBooks = (
       setViewer(v);
     };
 
-    const runOrQueueCallback = (cb: () => void) => {
-      if (isBooksApiReady) {
-        cb();
-      } else {
-        callbacks.push(cb);
-      }
-    };
-
-    if (window.google?.books) {
-      if (!isBooksApiReady) {
-        window.google.books.load();
-        window.google.books.setOnLoadCallback(() => {
-          isBooksApiReady = true;
-          callbacks.forEach((fn) => fn());
-          callbacks.length = 0;
-        });
-      }
-      runOrQueueCallback(initViewer);
-    } else if (!scriptAdded) {
-      const script = document.createElement("script");
-      script.src = "https://www.google.com/books/jsapi.js";
-      script.id = "google_script";
-      script.onload = () => {
-        if (window.google?.books) {
-          window.google.books.load();
-          window.google.books.setOnLoadCallback(() => {
-            isBooksApiReady = true;
-            callbacks.forEach((fn) => fn());
-            callbacks.length = 0;
-          });
-        }
-      };
-      script.onerror = () => {
-        console.error("Failed to load Google Books API.");
-      };
-      document.body.appendChild(script);
-      scriptAdded = true;
-
-      runOrQueueCallback(initViewer);
-    } else {
-      runOrQueueCallback(initViewer);
+    if (!isBooksApiLoaded) {
+      window.google.books.load();
+      window.google.books.setOnLoadCallback(() => {
+        isBooksApiLoaded = true;
+        initViewer();
+      });
+      return;
     }
+    initViewer();
   }, [id, canvasRef]);
 
   return viewer;
