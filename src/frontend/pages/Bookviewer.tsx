@@ -9,38 +9,13 @@ import {
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { useGoogleBooks } from "../customHooks/useGoogleBooks";
 
-interface GoogleBooksViewer {
-  load: (bookId: string, options?: object) => boolean;
-  isLoaded: () => boolean;
-  getPageNumber: () => number;
-  getPageId: () => string;
-  goToPage: (pageNumber: number) => void;
-  goToPageId: (pageId: string) => void;
-  nextPage: () => void;
-  previousPage: () => void;
-  zoomIn: () => void;
-  zoomOut: () => void;
-  resize: () => void;
-  highlight: (query: string) => void;
-}
-
 const BookViewer = () => {
   const params = useParams();
-  const id = params.id;
+  const id = params.id ?? "";
   const viewerRef = useRef<HTMLDivElement>(null);
-  const [viewer, setViewer] = useState<GoogleBooksViewer | null>(null);
-  const [pageState, handlePageState] = useLocalStorage(id ?? "", "");
+  const viewer = useGoogleBooks(viewerRef, id);
+  const [pageState, handlePageState] = useLocalStorage(id, "");
   const [isLoaded, setIsLoaded] = useState(false);
-  const ready = useGoogleBooks();
-
-  useEffect(() => {
-    if (!ready || !id) return;
-    window.google.books.setOnLoadCallback(() => {
-      const v = new window.google.books.Viewer(viewerRef.current);
-      v.load(id);
-      setViewer(v);
-    });
-  }, [ready, id]);
 
   useEffect(() => {
     if (isLoaded) return;
@@ -57,8 +32,8 @@ const BookViewer = () => {
   const handlePageChange = (cb: () => void) => {
     console.log(viewerRef.current?.children[0]);
     console.log(viewer?.getPageNumber);
-    handlePageState(viewer?.getPageId() ?? "");
     cb();
+    handlePageState(viewer?.getPageId() ?? "");
   };
 
   if (!id) return <div>Error</div>;
