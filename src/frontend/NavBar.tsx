@@ -3,7 +3,7 @@ import NavLink from "./components/NavLink";
 import NavSearch from "./components/NavSearch";
 import { Link } from "react-router-dom";
 
-const NavBar = () => {
+const NavBar = ({ reset }: { reset?: () => void }) => {
   const user = false;
   return (
     <nav className="relative z-40 flex justify-between h-15 bg-green/80 backdrop-blur-md shadow-md">
@@ -13,7 +13,7 @@ const NavBar = () => {
         </Link>
         <NavLink to="/">Home</NavLink>
         <NavLink to="/info">Info</NavLink>
-        <NavSearch />
+        <NavSearch reset={reset} />
       </div>
       {!user && (
         <div className="flex justify-between items-center gap-5 md:gap-10 mr-5 md:mr-40">

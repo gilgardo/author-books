@@ -6,7 +6,7 @@ import { useBooksSearch } from "../useQueryCustomHooks/useBooksSearch";
 import type { BookDetailsParams, BooksSearchParams } from "../../types/params";
 import { useNavigateToParams } from "../customHooks/useNavigateToParams";
 
-const NavSearch = () => {
+const NavSearch = ({ reset }: { reset?: () => void }) => {
   const [isActive, setIsActive] = useState(false);
   const [search, setSearch] = useState("");
   const [focusIndex, setFocusIndex] = useState(0);
@@ -18,11 +18,17 @@ const NavSearch = () => {
   const navigateToBookSearch: (params: BooksSearchParams) => void =
     useNavigateToParams("/books/search", {
       shouldNavigate: search !== "",
-      onAfterNavigate: () => setSearch(""),
+      onAfterNavigate: () => {
+        setSearch("");
+        reset?.();
+      },
     });
   const navigateToBookDetails: (params: BookDetailsParams) => void =
     useNavigateToParams("/book", {
-      onAfterNavigate: () => setSearch(""),
+      onAfterNavigate: () => {
+        setSearch("");
+        reset?.();
+      },
     });
 
   const { data: books } = useBooksSearch(debouncedSearch, 0);

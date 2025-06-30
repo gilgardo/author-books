@@ -30,7 +30,7 @@ const BooksSearch = () => {
         className="flex justify-end
        items-center mt-4 gap-6">
         <CustomButton
-          disabled={page === 0}
+          disabled={page === 0 || queryResult.isPlaceholderData}
           onClick={() =>
             setSearchParams((params) => {
               params.set("page", (page - 1).toString());
@@ -40,7 +40,7 @@ const BooksSearch = () => {
           PREV
         </CustomButton>
         <CustomButton
-          disabled={page === maxPages}
+          disabled={page === maxPages || queryResult.isPlaceholderData}
           onClick={() =>
             setSearchParams((params) => {
               params.set("page", (page + 1).toString());

@@ -8,7 +8,6 @@ const API_KEY = process.env.GOOGLE_API_KEY;
 
 export async function searchBooks(req: Request, res: Response) {
   const { q, startIndex = "0", resultsNr = maxResults } = req.query;
-
   if (!q) {
     return res.status(400).json({ error: "Missing query" });
   }
@@ -17,7 +16,7 @@ export async function searchBooks(req: Request, res: Response) {
     const url = `${BASE_URL}?q=${encodeURIComponent(
       q.toString()
     )}&startIndex=${startIndex}&maxResults=${resultsNr}&printType=books&key=${API_KEY}`;
-
+    // console.log(url);
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -27,7 +26,7 @@ export async function searchBooks(req: Request, res: Response) {
       );
     }
     const data = await response.json();
-
+    // console.log(data.totalItems);
     res.json(data.items);
   } catch (err) {
     console.error(err);
