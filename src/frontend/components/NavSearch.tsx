@@ -5,6 +5,7 @@ import { toggle } from "../../utils/toggleBolean";
 import { useBooksSearch } from "../useQueryCustomHooks/useBooksSearch";
 import type { BookDetailsParams, BooksSearchParams } from "../../types/params";
 import { useNavigateToParams } from "../customHooks/useNavigateToParams";
+import clsx from "clsx";
 
 const NavSearch = ({ reset }: { reset?: () => void }) => {
   const [isActive, setIsActive] = useState(false);
@@ -99,9 +100,10 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
   return (
     <div className="relative h-auto z-50">
       <div
-        className={`flex items-center bg-light rounded-full h-8 transition-all duration-300 ${
+        className={clsx(
+          "flex items-center bg-light rounded-full h-8 transition-all duration-300",
           isActive ? "w-55" : "w-8"
-        }`}
+        )}
         tabIndex={-1}>
         {isActive && (
           <div className="relative w-full">

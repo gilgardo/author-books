@@ -11,7 +11,8 @@ import { useGoogleBooks } from "../customHooks/useGoogleBooks";
 import ViewerIcon from "../components/ViewerIcon";
 import { ErrorBoundary } from "react-error-boundary";
 import ViewerFallback from "../components/ViewerFallback";
-
+import clsx from "clsx";
+import BookViewerLoader from "../loaders/BookViewerLoader";
 class MissingIdError extends Error {
   type: string;
   constructor(message = "No ID provided") {
@@ -43,16 +44,33 @@ const BookViewer = () => {
   const [pageState, handlePageState] = useLocalStorage(id, "");
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const handleRefresh = () => {
+    const isRefreshTried = sessionStorage.getItem("isRefreshTried");
+    if (isRefreshTried !== "true") {
+      sessionStorage.setItem("isRefreshTried", "true");
+      window.location.reload();
+    }
+    sessionStorage.removeItem("isRefreshTried");
+    throw new Error("Viewer not available");
+  };
+
   useEffect(() => {
     if (isLoaded) return;
+    const refreshTimeout = setTimeout(() => {
+      if (isLoaded) return;
+      handleRefresh();
+    }, 10000);
     const setPageInterval = setInterval(() => {
       if (!viewer?.isLoaded()) return;
-      if (pageState !== "") viewer.goToPageId(pageState);
+      if (pageState !== "") viewer?.goToPageId(pageState);
       clearInterval(setPageInterval);
-      viewer.resize();
       setIsLoaded(true);
+      sessionStorage.removeItem("isRefreshTried");
     }, 500);
-    return () => clearInterval(setPageInterval);
+    return () => {
+      clearInterval(setPageInterval);
+      clearTimeout(refreshTimeout);
+    };
   }, [viewer, pageState, isLoaded]);
 
   useEffect(() => {
@@ -62,24 +80,16 @@ const BookViewer = () => {
       WIDTH_TO_ZOOM_LEVELS.findIndex((maxWidth) => width <= maxWidth);
 
     const adaptZoomToWidth = (
-      current: number,
       target: number,
       zoomFn: () => void,
-      increment: number,
-      testFn: (a: number, b: number) => boolean
+      increment: 1 | -1
     ) => {
-      if (
-        (current <= MIN_ZOOM_LEVEL && increment < 0) ||
-        (current >= MAX_ZOOM_LEVEL && increment > 0) ||
-        !testFn(current, target)
-      ) {
-        setZoomLevel(target);
-        return;
+      if (zoomLevel < target && increment !== 1) return;
+      if (zoomLevel > target && increment !== -1) return;
+      for (let current = zoomLevel; current !== target; current += increment) {
+        zoomFn();
       }
-      zoomFn();
-      const next = current + increment;
-      setZoomLevel(next);
-      adaptZoomToWidth(next, target, zoomFn, increment, testFn);
+      setZoomLevel(target);
     };
 
     const handleResize = () => {
@@ -88,29 +98,16 @@ const BookViewer = () => {
         if (!viewer?.isLoaded()) return;
         const targetLevel = getZoomLevelFromWidth(window.innerWidth);
         if (zoomLevel < targetLevel) {
-          adaptZoomToWidth(
-            zoomLevel,
-            targetLevel,
-            viewer.zoomIn,
-            1,
-            (a, b) => a < b
-          );
+          adaptZoomToWidth(targetLevel, viewer.zoomIn, 1);
         } else if (zoomLevel > targetLevel) {
-          adaptZoomToWidth(
-            zoomLevel,
-            targetLevel,
-            viewer.zoomOut,
-            -1,
-            (a, b) => a > b
-          );
+          adaptZoomToWidth(targetLevel, viewer.zoomOut, -1);
         }
         viewer.resize();
       });
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize();
-
+    viewer?.resize();
     return () => {
       window.removeEventListener("resize", handleResize);
       if (resizeFrame) cancelAnimationFrame(resizeFrame);
@@ -154,14 +151,21 @@ const BookViewer = () => {
   return (
     <ErrorBoundary FallbackComponent={ViewerFallback}>
       <div className="flex justify-center sm:flex-row flex-col">
-        {viewer && isLoaded && (
-          <div className="flex sm:flex-col sm:justify-start justify-between items-start gap-10 rounded-t-md sm:rounded-l-md sm:rounded-t-none sm:bg-green/80 p-3">
-            {viewerIcons.map((icon, ind) => (
-              <ViewerIcon key={`icon-${ind}`} {...icon} />
-            ))}
-          </div>
-        )}
-        <div key={id} ref={viewerRef} className="h-250 sm:w-[70%] w-full" />
+        <div className="flex sm:flex-col sm:justify-start justify-between items-start gap-10 rounded-t-md sm:rounded-l-md sm:rounded-t-none sm:bg-green/80 p-3">
+          {viewerIcons.map((icon, ind) => (
+            <ViewerIcon isLoaded={isLoaded} key={`icon-${ind}`} {...icon} />
+          ))}
+        </div>
+
+        <div
+          key={id}
+          ref={viewerRef}
+          className={clsx(
+            "h-250 sm:w-[70%] w-full",
+            !isLoaded && "invisible absolute pointer-events-none"
+          )}
+        />
+        {!isLoaded && <BookViewerLoader />}
       </div>
     </ErrorBoundary>
   );

@@ -1,4 +1,3 @@
-// src/global.d.ts
 export {};
 interface GoogleBooksViewer {
   load: (bookId: string, options?: object) => boolean;

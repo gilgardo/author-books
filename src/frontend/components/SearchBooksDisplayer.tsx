@@ -1,6 +1,7 @@
 import type { UseQueryResult } from "@tanstack/react-query";
 import type { Volume } from "../../types/googleApi";
 import BooksSearchLoader from "../loaders/BooksSearchLoader";
+import clsx from "clsx";
 
 const SearchBooksDisplayer = ({
   queryResult,
@@ -20,9 +21,10 @@ const SearchBooksDisplayer = ({
           <div
             key={book.id}
             onClick={() => handleClick(book.id)}
-            className={`${
-              isPlaceholderData ? "bg-green/40" : "bg-green/80 hover:bg-green"
-            } shadow-md rounded-2xl overflow-hidden transition-transform hover:shadow-2xl hover:scale-95 duration-200 flex flex-col justify-between p-4 cursor-pointer`}>
+            className={clsx(
+              isPlaceholderData ? "bg-green/40" : "bg-green/80 hover:bg-green",
+              "shadow-md rounded-2xl overflow-hidden transition-transform hover:shadow-2xl hover:scale-95 duration-200 flex flex-col justify-between p-4 cursor-pointer"
+            )}>
             <div className="flex flex-col items-center text-center">
               <img
                 className="h-60 w-40 object-cover rounded-md mb-3"

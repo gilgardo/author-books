@@ -1,6 +1,7 @@
 const ViewerIcon = ({
   Icon,
   handleClick,
+  isLoaded,
 }: {
   Icon: React.ForwardRefExoticComponent<
     Omit<React.SVGProps<SVGSVGElement>, "ref"> & {
@@ -9,12 +10,18 @@ const ViewerIcon = ({
     } & React.RefAttributes<SVGSVGElement>
   >;
   handleClick: () => void;
+  isLoaded: boolean;
 }) => {
   return (
-    <Icon
-      className="sm:text-light text-green/80 cursor-pointer size-7"
-      onClick={handleClick}
-    />
+    <button onClick={handleClick} disabled={!isLoaded}>
+      <Icon
+        className={`${
+          isLoaded
+            ? "sm:text-light text-green/80 cursor-pointer"
+            : "text-transparent"
+        } size-7`}
+      />
+    </button>
   );
 };
 
