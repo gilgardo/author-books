@@ -1,4 +1,7 @@
 export {};
+
+import type { User as PrismaUser } from "@prisma/client";
+
 interface GoogleBooksViewer {
   load: (bookId: string, options?: object) => boolean;
   isLoaded: () => boolean;
@@ -15,6 +18,11 @@ interface GoogleBooksViewer {
 }
 
 declare global {
+  namespace Express {
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    interface User extends PrismaUser {}
+  }
+
   interface Window {
     google: {
       books: {
