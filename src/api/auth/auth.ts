@@ -11,7 +11,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 export const router = Router();
 
 const getTokenFromCookie = (req: Request) => {
-  if (req.cookies && req.cookies.token) {
+  if (req.cookies?.token) {
     return req.cookies.token;
   }
   return null;

@@ -19,5 +19,6 @@ export const signUp = async (req: Request, res: Response) => {
   const user = await prisma.user.create({
     data: { email, password: hashedPassword },
   });
-  signJwtAndSetCookie(res, user.id);
+  signJwtAndSetCookie(res, user);
+  res.json(user);
 };

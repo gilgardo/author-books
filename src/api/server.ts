@@ -6,15 +6,29 @@ import { router as userRouter } from "./routes/user.ts";
 import type { Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import csrf from "csurf";
 
 dotenv.config();
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+const csrfProtection = csrf({
+  cookie: true,
+});
 app.use(express.json());
+app.use(csrfProtection);
+
 app.use("/api/books/search", booksRouter);
 app.use("/api/book", bookRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+app.get("/csrf-token", (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
 app.use((err: Error, _: Request, res: Response) => {
   console.error(err.stack);
   res.status(500).json({ error: "Something went wrong" });

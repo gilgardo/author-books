@@ -4,6 +4,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import Fallback from "../components/Fallback";
 import MainWraper from "./MainWraper";
+import { AuthProvider } from "../auth/AuthProvider";
 
 const MainLayout = () => {
   return (
@@ -15,9 +16,11 @@ const MainLayout = () => {
             <ErrorBoundary
               FallbackComponent={(props) => <Fallback {...props} />}
               onReset={reset}>
-              <MainWraper>
-                <Outlet />
-              </MainWraper>
+              <AuthProvider>
+                <MainWraper>
+                  <Outlet />
+                </MainWraper>
+              </AuthProvider>
             </ErrorBoundary>
           </>
         )}

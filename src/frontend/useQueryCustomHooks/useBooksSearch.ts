@@ -13,7 +13,11 @@ const searchBooks = async (
     `${BASE_URL}/books/search?q=${encodeURIComponent(query)}&startIndex=${
       page * maxResults
     }`,
-    { signal }
+    {
+      method: "GET",
+      credentials: "include",
+      signal,
+    }
   );
   if (!res.ok) throw new Error("bad request");
   const data = await res.json();

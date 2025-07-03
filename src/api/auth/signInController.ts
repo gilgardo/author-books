@@ -1,11 +1,7 @@
 import type { Request, Response } from "express";
 import prisma from "../prisma";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-
-dotenv.config();
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
+import signJwtAndSetCookie from "./signJwtAndSetCookie";
 
 export const signIn = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -22,6 +18,6 @@ export const signIn = async (req: Request, res: Response) => {
       .status(401)
       .json({ message: "Invalid credentials", type: "password" });
 
-  const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1h" });
-  res.json({ token });
+  signJwtAndSetCookie(res, user);
+  res.json(user);
 };
