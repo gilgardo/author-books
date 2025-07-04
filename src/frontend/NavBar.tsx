@@ -18,7 +18,7 @@ const NavBar = ({ reset }: { reset?: () => void }) => {
       </div>
       {!isAuth ? (
         <div className="flex justify-between items-center gap-5 md:gap-10 mr-5 md:mr-40">
-          <NavLink to="/register">Register</NavLink>
+          <NavLink to="/signUp">Register</NavLink>
           <NavLink to="/signIn">SignIn</NavLink>
         </div>
       ) : (

@@ -1,9 +1,7 @@
 import { createContext } from "react";
+import type { User as PrismaUser } from "@prisma/client";
 
-export type User = {
-  id: number;
-  email: string;
-};
+export type User = Omit<PrismaUser, "password">;
 
 export type AuthContextType = {
   user: User | null;
