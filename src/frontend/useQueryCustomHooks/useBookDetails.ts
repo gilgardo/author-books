@@ -1,15 +1,13 @@
 import { queryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
-import { BASE_URL } from "../../data";
 import type { Volume } from "../../types/googleApi";
 import { getBooksSearchQueryOptions } from "./useBooksSearch";
+import api from "../../utils/api";
 
 const searchBook = async (id: string) => {
-  const res = await fetch(`${BASE_URL}/book?id=${encodeURIComponent(id)}`, {
+  const { data } = await api.get(`/book?id=${encodeURIComponent(id)}`, {
     method: "GET",
-    credentials: "include",
   });
-  if (!res.ok) throw new Error("bad request");
-  const data = await res.json();
+
   return data as Volume;
 };
 

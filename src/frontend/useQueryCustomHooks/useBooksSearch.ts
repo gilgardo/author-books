@@ -1,26 +1,22 @@
 import { queryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
 import { maxResults } from "../../data/maxResults";
-import { BASE_URL } from "../../data";
 import type { Volume } from "../../types/googleApi";
 import { useEffect } from "react";
-
+import api from "../../utils/api";
 const searchBooks = async (
   query: string,
   page: number,
   signal: AbortSignal
 ) => {
-  const res = await fetch(
-    `${BASE_URL}/books/search?q=${encodeURIComponent(query)}&startIndex=${
+  const { data } = await api.get(
+    `/books/search?q=${encodeURIComponent(query)}&startIndex=${
       page * maxResults
     }`,
     {
-      method: "GET",
-      credentials: "include",
       signal,
     }
   );
-  if (!res.ok) throw new Error("bad request");
-  const data = await res.json();
+
   return data as Volume[];
 };
 

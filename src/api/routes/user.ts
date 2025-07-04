@@ -1,23 +1,19 @@
 import { Router } from "express";
-import { requireAuth } from "../auth/auth";
+import { optionalAuth, requireAuth } from "../auth/auth";
 import cookieParser from "cookie-parser";
-import type { Response, Request } from "express";
-import type { JwtPayload } from "jsonwebtoken";
-// import csrf from "csurf";
+import type { Request as JWTRequest } from "express-jwt";
+import type { Response } from "express";
 
-interface AuthenticatedRequest extends Request {
-  auth?: JwtPayload | string;
-}
+import csrf from "csurf";
 
 export const router = Router();
 
-// const csrfProtection = csrf({
-//   cookie: true,
-// });
-router.use(cookieParser());
-// router.use(csrfProtection);
-router.use(requireAuth);
-
-router.get("/", (req: AuthenticatedRequest, res: Response) => {
-  res.json({ user: req.auth });
+const csrfProtection = csrf({
+  cookie: true,
 });
+router.use(cookieParser());
+router.use(csrfProtection);
+router.get("/", optionalAuth, (req: JWTRequest, res: Response) => {
+  res.json({ user: req.auth ?? null });
+});
+router.use(requireAuth);

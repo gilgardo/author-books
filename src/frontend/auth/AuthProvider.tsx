@@ -7,7 +7,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   if (userQuery.isLoading) {
     return <div>...</div>;
   }
-
   const authValue = user
     ? { user, isAuth: true }
     : { user: null, isAuth: false };

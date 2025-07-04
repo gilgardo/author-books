@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import SearchBooksDisplayer from "../components/SearchBooksDisplayer";
 import CustomButton from "../components/CustomButton.tsx";
-import { useBooksSearch } from "../useQueryCustomHooks/useBooksSearch.tsx";
+import { useBooksSearch } from "../useQueryCustomHooks/useBooksSearch.ts";
 import { useNavigateToParams } from "../customHooks/useNavigateToParams.ts";
 
 const BooksSearch = () => {

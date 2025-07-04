@@ -17,6 +17,13 @@ const getTokenFromCookie = (req: Request) => {
   return null;
 };
 
+export const optionalAuth = expressjwt({
+  secret: JWT_SECRET,
+  algorithms: ["HS256"],
+  getToken: getTokenFromCookie,
+  credentialsRequired: false,
+});
+
 export const requireAuth = expressjwt({
   secret: JWT_SECRET,
   algorithms: ["HS256"],

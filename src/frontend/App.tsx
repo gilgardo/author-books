@@ -15,6 +15,8 @@ const router = createBrowserRouter([
       { path: "book", element: <BookDetails /> },
       { path: "book/:id/view", element: <BookViewer /> },
       { path: "info", element: <Info /> },
+      // { path: "signIn", element: <SignIn /> },
+      // { path: "signUp", element: <SignUp /> },
     ],
   },
 ]);
