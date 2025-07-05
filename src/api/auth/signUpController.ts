@@ -5,8 +5,8 @@ import bcrypt from "bcryptjs";
 import signJwtAndSetCookie from "./signJwtAndSetCookie";
 
 export const signUp = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  if (!email || !password)
+  const { email, password, userName } = req.body;
+  if (!email || !password || !userName)
     return res.status(400).json({ message: "Missing fields" });
 
   const existing = await prisma.user.findUnique({ where: { email } });
@@ -17,8 +17,8 @@ export const signUp = async (req: Request, res: Response) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await prisma.user.create({
-    data: { email, password: hashedPassword },
+    data: { email, password: hashedPassword, userName },
   });
   signJwtAndSetCookie(res, user);
-  res.json(user);
+  res.json({ id: user.id, email: user.email, userName: user.userName });
 };

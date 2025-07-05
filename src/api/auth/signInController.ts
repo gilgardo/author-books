@@ -19,5 +19,5 @@ export const signIn = async (req: Request, res: Response) => {
       .json({ message: "Invalid credentials", type: "password" });
 
   signJwtAndSetCookie(res, user);
-  res.json(user);
+  res.json({ id: user.id, email: user.email, userName: user.userName });
 };

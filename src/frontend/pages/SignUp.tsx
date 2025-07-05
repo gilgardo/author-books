@@ -10,42 +10,57 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import type { User } from "@prisma/client";
 import { useForm } from "@tanstack/react-form";
+import useSignUp from "../useQueryCustomHooks/useSignUp";
 
-const SignIn = () => {
-  const defaultUser: { email: string; password: string } = {
+const SignUp = () => {
+  const defaultUser: Omit<User, "id"> = {
     email: "",
+    userName: "",
     password: "",
   };
 
-  const fields: (keyof typeof defaultUser)[] = ["email", "password"];
-
+  const fields: (keyof typeof defaultUser)[] = [
+    "email",
+    "userName",
+    "password",
+  ];
+  const { mutate } = useSignUp();
   const form = useForm({
     defaultValues: defaultUser,
     onSubmit: async ({ value }) => {
-      console.log(value);
+      console.log("sub");
+      mutate(value);
     },
   });
 
   return (
     <Card className="w-full max-w-sm m-auto">
       <CardHeader>
-        <CardTitle>Login to your account</CardTitle>
+        <CardTitle>Register to your account</CardTitle>
         <CardDescription>
-          Enter your email below to login to your account
+          Enter your data below to register your account
         </CardDescription>
         <CardAction>
           <Button variant="link">Sign In</Button>
         </CardAction>
       </CardHeader>
       <CardContent>
-        <form>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}>
           {fields.map((key) => (
             <form.Field
+              key={key}
               name={key}
               children={(field) => (
                 <div className="grid gap-2">
-                  <Label htmlFor={key}>Email</Label>
+                  <Label htmlFor={key}>
+                    {key[0].toLowerCase() + key.slice(1)}
+                  </Label>
                   <Input
                     id={key}
                     type={key}
@@ -64,12 +79,12 @@ const SignIn = () => {
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button type="submit" className="w-full">
-          Login
+        <Button onClick={form.handleSubmit} type="submit" className="w-full">
+          Register
         </Button>
       </CardFooter>
     </Card>
   );
 };
 
-export default SignIn;
+export default SignUp;
