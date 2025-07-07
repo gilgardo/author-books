@@ -2,14 +2,11 @@ import { useGetUser } from "../useQueryCustomHooks/useGetUser";
 import { AuthContext } from "./authContext";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { data: user, ...userQuery } = useGetUser();
+  const { data: user, isPending } = useGetUser();
 
-  if (userQuery.isLoading) {
-    return <div>...</div>;
-  }
   const authValue = user
-    ? { user, isAuth: true }
-    : { user: null, isAuth: false };
+    ? { user, isAuth: true, isPending }
+    : { user: null, isAuth: false, isPending };
 
   return <AuthContext value={authValue}>{children}</AuthContext>;
 };

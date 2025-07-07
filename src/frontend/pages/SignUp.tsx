@@ -15,22 +15,18 @@ import { useForm } from "@tanstack/react-form";
 import useSignUp from "../useQueryCustomHooks/useSignUp";
 
 const SignUp = () => {
-  const defaultUser: Omit<User, "id"> = {
+  const defaultUser: Omit<User, "id"> & { confirm: string } = {
     email: "",
     userName: "",
     password: "",
+    confirm: "",
   };
 
-  const fields: (keyof typeof defaultUser)[] = [
-    "email",
-    "userName",
-    "password",
-  ];
-  const { mutate } = useSignUp();
+  const { mutate, isPending } = useSignUp();
+
   const form = useForm({
     defaultValues: defaultUser,
     onSubmit: async ({ value }) => {
-      console.log("sub");
       mutate(value);
     },
   });
@@ -46,41 +42,93 @@ const SignUp = () => {
           <Button variant="link">Sign In</Button>
         </CardAction>
       </CardHeader>
+
       <CardContent>
         <form
           onSubmit={(e) => {
             e.preventDefault();
             e.stopPropagation();
           }}>
-          {fields.map((key) => (
-            <form.Field
-              key={key}
-              name={key}
-              children={(field) => (
-                <div className="grid gap-2">
-                  <Label htmlFor={key}>
-                    {key[0].toLowerCase() + key.slice(1)}
-                  </Label>
-                  <Input
-                    id={key}
-                    type={key}
-                    placeholder="m@example.com"
-                    required
-                    value={field.state.value}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      field.handleChange(e.target.value)
-                    }
-                    onBlur={field.handleBlur}
-                  />
-                </div>
-              )}
-            />
-          ))}
+          <form.Field
+            name="email"
+            children={(field) => (
+              <div className="grid gap-2 mb-4">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="m@example.com"
+                  required
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  onBlur={field.handleBlur}
+                />
+              </div>
+            )}
+          />
+
+          <form.Field
+            name="userName"
+            children={(field) => (
+              <div className="grid gap-2 mb-4">
+                <Label htmlFor="userName">Username</Label>
+                <Input
+                  id="userName"
+                  type="text"
+                  placeholder="username..."
+                  required
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  onBlur={field.handleBlur}
+                />
+              </div>
+            )}
+          />
+
+          <form.Field
+            name="password"
+            children={(field) => (
+              <div className="grid gap-2 mb-4">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="password..."
+                  required
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  onBlur={field.handleBlur}
+                />
+              </div>
+            )}
+          />
+          <form.Field
+            name="confirm"
+            children={(field) => (
+              <div className="grid gap-2 mb-4">
+                <Label htmlFor="confirm">Password</Label>
+                <Input
+                  id="confirm"
+                  type="password"
+                  placeholder="confirm..."
+                  required
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  onBlur={field.handleBlur}
+                />
+              </div>
+            )}
+          />
         </form>
       </CardContent>
+
       <CardFooter className="flex-col gap-2">
-        <Button onClick={form.handleSubmit} type="submit" className="w-full">
-          Register
+        <Button
+          onClick={form.handleSubmit}
+          disabled={isPending}
+          type="submit"
+          className="w-full">
+          {isPending ? "..." : "Register"}
         </Button>
       </CardFooter>
     </Card>

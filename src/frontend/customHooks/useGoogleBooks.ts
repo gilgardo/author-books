@@ -1,3 +1,4 @@
+import { useScript } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
 
 export interface GoogleBooksViewer {
@@ -21,9 +22,14 @@ export const useGoogleBooks = (
   id: string
 ) => {
   const [viewer, setViewer] = useState<null | GoogleBooksViewer>(null);
+  const status = useScript("https://www.google.com/books/jsapi.js", {
+    removeOnUnmount: true,
+  });
+
+  if (status === "error") throw new Error("google books script does not load");
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || status !== "ready") return;
 
     const initViewer = () => {
       const container = canvasRef.current;
@@ -46,7 +52,7 @@ export const useGoogleBooks = (
       return;
     }
     initViewer();
-  }, [id, canvasRef]);
+  }, [id, canvasRef, status]);
 
   return viewer;
 };
