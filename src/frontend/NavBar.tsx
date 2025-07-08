@@ -3,9 +3,10 @@ import NavLink from "./components/NavLink";
 import NavSearch from "./components/NavSearch";
 import { Link } from "react-router-dom";
 import { useAuth } from "./auth/useAuth";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 const NavBar = ({ reset }: { reset?: () => void }) => {
-  const { user, isAuth } = useAuth();
+  const { isAuth } = useAuth();
   return (
     <nav className="relative z-40 flex justify-between h-15 bg-green/80 backdrop-blur-md shadow-md">
       <div className="flex justify-between items-center gap-5 md:gap-10 ml-5 md:ml-40">
@@ -22,7 +23,11 @@ const NavBar = ({ reset }: { reset?: () => void }) => {
           <NavLink to="/signIn">SignIn</NavLink>
         </div>
       ) : (
-        <div>{user?.email}</div>
+        <div className="mr-5 md:mr-40 flex items-center">
+          <Avatar>
+            <AvatarImage src="/avatar.png" />
+          </Avatar>
+        </div>
       )}
     </nav>
   );

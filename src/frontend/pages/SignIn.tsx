@@ -12,30 +12,26 @@ import useSign from "../useQueryCustomHooks/useSign";
 import { useAuth } from "../auth/useAuth";
 import { Link, Navigate } from "react-router-dom";
 
-const SignUp = () => {
+const SignIn = () => {
   const { isAuth } = useAuth();
-  const { mutateAsync } = useSign("signUp");
+  const { mutate } = useSign("signIn");
   const form = useSignForm(
     {
       email: "",
-      userName: "",
       password: "",
-      confirm: "",
     },
-    mutateAsync
+    mutate
   );
-
   if (isAuth) return <Navigate to="/" replace />;
+
   return (
     <Card className="w-full max-w-sm m-auto">
       <CardHeader>
-        <CardTitle>Register to your account</CardTitle>
-        <CardDescription>
-          Enter your data below to register your account
-        </CardDescription>
+        <CardTitle>Login to your account</CardTitle>
+        <CardDescription>Enter your data below to Sign in</CardDescription>
         <CardAction>
           <Button variant="link">
-            <Link to={"/signIn"}>Sign In</Link>
+            <Link to={"/signUp"}>Sign In</Link>
           </Button>
         </CardAction>
       </CardHeader>
@@ -57,32 +53,11 @@ const SignUp = () => {
               />
             )}
           />
-          <form.AppField
-            name="userName"
-            children={(field) => (
-              <field.TextField
-                id="userName"
-                label="Username"
-                placeholder="user"
-              />
-            )}
-          />
+
           <form.AppField
             name="password"
             children={(field) => (
               <field.TextField id="password" label="Password" type="password" />
-            )}
-          />
-          <form.AppField
-            name="confirm"
-            validators={{
-              onChangeListenTo: ["password"],
-              onChange: ({ value, fieldApi }) =>
-                value !== fieldApi.form.getFieldValue("password") &&
-                "Password do not match",
-            }}
-            children={(field) => (
-              <field.TextField id="confirm" label="Confirm" type="password" />
             )}
           />
           <form.AppForm>
@@ -98,4 +73,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignIn;
