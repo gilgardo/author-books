@@ -1,34 +1,47 @@
 import { queryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Volume } from "../../types/googleApi";
 import { getBooksSearchQueryOptions } from "./useBooksSearch";
 import api from "../../utils/api";
+import type { OpenLibraryWork } from "@/types/openLibrary";
 
-const searchBook = async (id: string) => {
-  const { data } = await api.get(`/book?id=${encodeURIComponent(id)}`, {
-    method: "GET",
-  });
+const searchBook = async (key: string) => {
+  const { data } = await api.get(`/book?key=${encodeURIComponent(key)}`);
 
-  return data as Volume;
+  return data as OpenLibraryWork;
 };
 
-export function getBookDetailsQueryOptions(id: string) {
+export function getBookDetailsQueryOptions(key: string) {
   return queryOptions({
-    queryKey: ["book", { id }],
-    queryFn: () => searchBook(id),
-    staleTime: 60 * 1000,
+    queryKey: ["book", { key }],
+    queryFn: () => searchBook(key),
+    staleTime: 100,
   });
 }
 
-export const useBookDetails = (id: string, query = "", page = 0) => {
+export const useBookDetails = (key: string, query = "", page = 0) => {
   const queryClient = useQueryClient();
 
   return useQuery({
-    ...getBookDetailsQueryOptions(id),
-    initialData: () => {
+    ...getBookDetailsQueryOptions(key),
+    placeholderData: () => {
       if (query === "") return undefined;
-      return queryClient
+      const searchData = queryClient
         .getQueryData(getBooksSearchQueryOptions(query, page).queryKey)
-        ?.find((book) => book.id === id);
+        ?.docs.find((dock) => dock.key === key);
+      if (!searchData) return undefined;
+      return {
+        title: searchData.title,
+        covers: searchData.cover_i ? [searchData.cover_i] : undefined,
+        key: searchData?.key,
+        authors: searchData.author_key?.[0]
+          ? [
+              {
+                author: { key: searchData.author_key[0] },
+                type: { key: "/type/author_role" },
+              },
+            ]
+          : undefined,
+        type: { key: "/type/work" },
+      };
     },
   });
 };

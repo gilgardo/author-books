@@ -1,32 +1,21 @@
 import type { Request, Response } from "express";
-import dotenv from "dotenv";
+import { axiosWithUserAgent } from "../customAxios";
 
-dotenv.config();
-const BASE_URL = "https://www.googleapis.com/books/v1/volumes";
-const API_KEY = process.env.GOOGLE_API_KEY;
+const BASE_URL = "https://openlibrary.org";
 
 export async function searchBook(req: Request, res: Response) {
-  const { id } = req.query;
-  if (!id) {
-    return res.status(400).json({ error: "Missing id" });
+  const { key } = req.query;
+  if (!key) {
+    return res.status(400).json({ error: "Missing key" });
   }
+  const replacedKey = encodeURIComponent(key.toString()).replace("%2F", "/");
 
   try {
-    const url = `${BASE_URL}/${encodeURIComponent(
-      id.toString()
-    )}?key=${API_KEY}`;
+    const url = `${BASE_URL}${replacedKey}.json`;
 
-    const response = await fetch(url);
+    const response = await axiosWithUserAgent.get(url);
 
-    if (!response.ok) {
-      const text = await response.text();
-      throw new Error(
-        `Failed to fetch from Google Books API: ${response.status} ${response.statusText} - ${text}`
-      );
-    }
-
-    const data = await response.json();
-    res.json(data);
+    res.json(response.data);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch book" });

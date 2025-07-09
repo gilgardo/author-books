@@ -9,7 +9,7 @@ export interface OpenLibrarySearchDoc {
   has_fulltext: boolean;
   ia?: string[];
   ia_collection_s?: string;
-  key: string; // starts with "/works/"
+  key: string;
   language?: string[];
   lending_edition_s?: string;
   lending_identifier_s?: string;
@@ -26,3 +26,40 @@ export interface OpenLibrarySearchResponse {
   q: string;
   docs: OpenLibrarySearchDoc[];
 }
+
+export type OpenLibraryWork = {
+  title: string;
+  covers?: number[];
+  subject_places?: string[];
+  subjects?: string[];
+  subject_people?: string[];
+  key: string;
+  authors?: {
+    author: {
+      key: string;
+    };
+    type: {
+      key: string;
+    };
+  }[];
+  subject_times?: string[];
+  type: {
+    key: string;
+  };
+  description?:
+    | {
+        type: string;
+        value: string;
+      }
+    | string;
+  latest_revision?: number;
+  revision?: number;
+  created?: {
+    type: string;
+    value: string;
+  };
+  last_modified?: {
+    type: string;
+    value: string;
+  };
+};
