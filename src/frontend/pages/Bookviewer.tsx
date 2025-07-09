@@ -50,8 +50,10 @@ const BookViewer = () => {
       sessionStorage.setItem("isRefreshTried", "true");
       window.location.reload();
     }
-    sessionStorage.removeItem("isRefreshTried");
-    throw new Error("Viewer not available");
+    setTimeout(() => {
+      sessionStorage.removeItem("isRefreshTried");
+      throw new Error("Viewer not available");
+    }, 50);
   };
 
   useEffect(() => {
@@ -59,7 +61,7 @@ const BookViewer = () => {
     const refreshTimeout = setTimeout(() => {
       if (isLoaded) return;
       handleRefresh();
-    }, 10000);
+    }, 8000);
     const setPageInterval = setInterval(() => {
       if (!viewer?.isLoaded()) return;
       if (pageState !== "") viewer?.goToPageId(pageState);
@@ -159,6 +161,7 @@ const BookViewer = () => {
 
         <div
           key={id}
+          id="viewerCanvas"
           ref={viewerRef}
           className={clsx(
             "h-250 sm:w-[70%] w-full",
