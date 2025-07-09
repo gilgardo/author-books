@@ -7,14 +7,14 @@ import { useNavigateToParams } from "../customHooks/useNavigateToParams.ts";
 const BooksSearch = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
-  const page = Number(searchParams.get("page") || 0);
+  const page = Number(searchParams.get("page") || 1);
   const navigateToBookDetails = useNavigateToParams("/book");
   const maxPages = 5;
 
   const queryResult = useBooksSearch(query, page);
 
-  const handleClick = (id: string) =>
-    navigateToBookDetails({ id, q: query, page: page.toString() });
+  const handleClick = (key: string, isReadable: string) =>
+    navigateToBookDetails({ q: query, page: page.toString(), isReadable, key });
 
   return (
     <>

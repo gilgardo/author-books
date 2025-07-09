@@ -1,29 +1,26 @@
 import { queryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
-import { maxResults } from "../../data/maxResults";
-import type { Volume } from "../../types/googleApi";
 import { useEffect } from "react";
 import api from "../../utils/api";
+import type { OpenLibrarySearchResponse } from "@/types/openLibrary";
 const searchBooks = async (
   query: string,
   page: number,
   signal: AbortSignal
 ) => {
   const { data } = await api.get(
-    `/books/search?q=${encodeURIComponent(query)}&startIndex=${
-      page * maxResults
-    }`,
+    `/books/search?q=${encodeURIComponent(query)}&page=${page}`,
     {
       signal,
     }
   );
 
-  return data as Volume[];
+  return data as OpenLibrarySearchResponse;
 };
 
 export function getBooksSearchQueryOptions(query: string, page: number) {
   return queryOptions({
     queryKey: ["books", "search", { query, page }],
-    queryFn: ({ signal }) => searchBooks(query, page, signal),
+    queryFn: ({ signal }) => searchBooks(query, page + 1, signal),
     enabled: query !== "",
     staleTime: 60 * 1000,
   });

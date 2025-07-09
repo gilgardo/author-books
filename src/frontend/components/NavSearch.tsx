@@ -6,6 +6,7 @@ import { useBooksSearch } from "../useQueryCustomHooks/useBooksSearch";
 import type { BookDetailsParams, BooksSearchParams } from "../../types/params";
 import { useNavigateToParams } from "../customHooks/useNavigateToParams";
 import clsx from "clsx";
+import coverUrlFactory from "@/utils/coverUrlFactory";
 
 const NavSearch = ({ reset }: { reset?: () => void }) => {
   const [isActive, setIsActive] = useState(false);
@@ -32,10 +33,13 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
       },
     });
 
-  const { data: books } = useBooksSearch(debouncedSearch, 0);
-  const suggestionListData = books?.slice(0, 5);
+  const { data } = useBooksSearch(debouncedSearch, 0);
+  const suggestionListData = data?.docs?.slice(0, 5);
   const isSuggestionListOpen =
-    isActive && books && books.length > 0 && debouncedSearch.length > 3;
+    isActive &&
+    data?.docs &&
+    data?.docs.length > 0 &&
+    debouncedSearch.length > 3;
 
   useEffect(() => {
     if (!isActive || !isSuggestionListOpen) {
@@ -149,14 +153,14 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
           ref={suggestionsListRef}
           onBlur={handleBlur}
           className="absolute top-10 left-0 w-65 bg-white rounded-md shadow-lg z-50 max-h-60 overflow-y-auto p-2">
-          {suggestionListData?.map((book, index) => (
+          {suggestionListData?.map((doc, index) => (
             <li
-              key={book.id}
+              key={doc.key}
               className="py-1 px-2 cursor-pointer rounded-md outline-none focus:bg-green/40 flex items-start gap-3"
               tabIndex={0}
               onClick={() =>
                 navigateToBookDetails({
-                  id: book.id,
+                  id: doc.key,
                   q: search,
                 })
               }
@@ -166,7 +170,7 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
                   suggestionListData?.length ?? 0 + 1,
                   () =>
                     navigateToBookDetails({
-                      id: book.id,
+                      id: doc.key,
                       q: search,
                     }),
                   isSuggestionListOpen
@@ -174,12 +178,16 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
               }
               onMouseEnter={() => setFocusIndex(index + 1)}>
               <img
-                src={book.volumeInfo.imageLinks?.smallThumbnail || ""}
-                alt={book.volumeInfo.title}
+                src={
+                  doc.cover_i
+                    ? coverUrlFactory(doc.cover_i).S
+                    : "/default_book_cover.jpg"
+                }
+                alt={doc.title}
                 className="h-10 w-6 rounded-md object-cover shrink-0"
               />
               <span className="line-clamp-2 text-sm font-bold text-dark max-w-[12rem]">
-                {book.volumeInfo.title}
+                {doc.title}
               </span>
             </li>
           ))}
