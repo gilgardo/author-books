@@ -5,16 +5,14 @@ import { axiosWithUserAgent } from "../customAxios.ts";
 const BASE_URL = "https://openlibrary.org/search.json";
 
 export async function searchBooks(req: Request, res: Response) {
-  const { q, page = "1", resultsNr = maxResults } = req.query;
+  const { q, page = "1", limit = maxResults } = req.query;
   if (!q) {
     return res.status(400).json({ error: "Missing query" });
   }
   try {
-    const url = `${BASE_URL}?q=${encodeURIComponent(
-      q.toString()
-    )}&page=${page}&limit=${resultsNr}`;
-
-    const response = await axiosWithUserAgent.get(url);
+    const response = await axiosWithUserAgent.get(BASE_URL, {
+      params: { q, page, limit },
+    });
     console.log("Status:", response.status);
     console.log("Headers:", response.headers);
     // console.log("Data (start):", response.data?.slice?.(0, 200)); // Optional

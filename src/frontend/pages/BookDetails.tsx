@@ -1,18 +1,19 @@
 import { useSearchParams } from "react-router-dom";
-import { useBookDetails } from "../useQueryCustomHooks/useBookDetails";
+import { useWorkSearch } from "../useQueryCustomHooks/useWorkSearch";
 // import CustomButton from "../components/CustomButton";
 import BookDetailLoader from "../loaders/BookDetailLoader";
 import coverUrlFactory from "@/utils/coverUrlFactory";
+import { useDocSearch } from "../useQueryCustomHooks/useDocSearch";
 
 const BookDetails = () => {
   const [searchParams] = useSearchParams();
   const key = searchParams.get("key") || "";
-  const query = searchParams.get("q") || "";
-  const page = searchParams.get("page") || "";
+  const q = searchParams.get("q") || "";
+  const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
   // const isReadable = searchParams.get("page") === "true";
   // const navigate = useNavigate();
-  const { data: work, isPending } = useBookDetails(key, query, Number(page));
-
+  const { data: work, isPending } = useWorkSearch(q, page, key);
+  const { data: doc } = useDocSearch(q, page, key);
   if (isPending) return <BookDetailLoader />;
 
   return (
