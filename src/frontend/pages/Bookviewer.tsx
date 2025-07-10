@@ -153,7 +153,7 @@ const BookViewer = () => {
   return (
     <ErrorBoundary FallbackComponent={ViewerFallback}>
       <div className="flex justify-center sm:flex-row flex-col">
-        <div className="flex sm:flex-col sm:justify-start justify-between items-start gap-10 rounded-t-md sm:rounded-l-md sm:rounded-t-none sm:bg-green/80 p-3">
+        <div className="flex sm:flex-col sm:justify-start justify-between items-start gap-10 rounded-t-md sm:rounded-l-md sm:rounded-t-none sm:bg-primary/80 p-3">
           {viewerIcons.map((icon, ind) => (
             <ViewerIcon isLoaded={isLoaded} key={`icon-${ind}`} {...icon} />
           ))}

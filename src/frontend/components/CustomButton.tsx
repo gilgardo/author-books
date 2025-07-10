@@ -11,7 +11,7 @@ const CustomButton = ({
     <button
       disabled={disabled}
       onClick={onClick}
-      className={`bg-green text-light disabled:bg-green/40 font-bold shadow-md rounded-2xl overflow-hidden transition-transform ${
+      className={`bg-primary text-secondary disabled:bg-green/40 font-bold shadow-md rounded-2xl overflow-hidden transition-transform ${
         !disabled ? "hover:scale-105 hover:shadow-xl cursor-pointer" : ""
       } duration-200 flex flex-col justify-between p-2`}>
       {children}

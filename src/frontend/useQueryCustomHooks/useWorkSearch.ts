@@ -1,4 +1,9 @@
-import { queryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  QueryClient,
+  queryOptions,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { getBooksSearchQueryOptions } from "./useBooksSearch";
 import api from "../../utils/api";
 import type { OpenLibraryWork } from "@/types/openLibrary";
@@ -9,20 +14,18 @@ const searchWork = async (key: string) => {
   return data as OpenLibraryWork;
 };
 
-export function getWorkQueryOptions(key: string) {
+export function getWorkQueryOptions(
+  key: string,
+  queryClient: QueryClient,
+  q?: string,
+  page?: number
+) {
   return queryOptions({
     queryKey: ["book", { key }],
     queryFn: () => searchWork(key),
     staleTime: 100,
-  });
-}
-
-export const useWorkSearch = (q: string, page: number = 1, key: string) => {
-  const queryClient = useQueryClient();
-
-  return useQuery({
-    ...getWorkQueryOptions(key),
     placeholderData: () => {
+      if (!page || !q) return undefined;
       if (q === "") return undefined;
       const searchData = queryClient
         .getQueryData(getBooksSearchQueryOptions(q, page).queryKey)
@@ -35,5 +38,13 @@ export const useWorkSearch = (q: string, page: number = 1, key: string) => {
         type: { key: "/type/work" },
       };
     },
+  });
+}
+
+export const useWorkSearch = (q: string, page: number = 1, key: string) => {
+  const queryClient = useQueryClient();
+
+  return useQuery({
+    ...getWorkQueryOptions(key, queryClient, q, page),
   });
 };

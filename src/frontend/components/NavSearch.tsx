@@ -105,7 +105,7 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
     <div className="relative h-auto z-50">
       <div
         className={clsx(
-          "flex items-center bg-light rounded-full h-8 transition-all duration-300",
+          "flex items-center bg-secondary rounded-full h-8 transition-all duration-300",
           isActive ? "w-55" : "w-8"
         )}
         tabIndex={-1}>
@@ -134,7 +134,7 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
                 )
               }
               placeholder="Search..."
-              className="bg-transparent pl-3 pr-7 py-1 text-sm outline-none focus:ring-2 focus:ring-black rounded-full w-full animate-fadeIn"
+              className="bg-trasparent pl-3 pr-7 py-1 text-sm outline-none focus:ring-2 focus:ring-black rounded-full w-full animate-fadeIn"
             />
           </div>
         )}
@@ -156,11 +156,11 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
           {suggestionListData?.map((doc, index) => (
             <li
               key={doc.key}
-              className="py-1 px-2 cursor-pointer rounded-md outline-none focus:bg-green/40 flex items-start gap-3"
+              className="py-1 px-2 cursor-pointer rounded-md outline-none focus:bg-primary/40 flex items-start gap-3"
               tabIndex={0}
               onClick={() =>
                 navigateToBookDetails({
-                  id: doc.key,
+                  key: doc.key.replace("/works/", ""),
                   q: search,
                 })
               }
@@ -170,7 +170,7 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
                   suggestionListData?.length ?? 0 + 1,
                   () =>
                     navigateToBookDetails({
-                      id: doc.key,
+                      key: doc.key.replace("/works/", ""),
                       q: search,
                     }),
                   isSuggestionListOpen

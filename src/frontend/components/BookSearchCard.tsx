@@ -24,9 +24,9 @@ const BookSearchCard = ({
     <Card
       onClick={() => handleClick(key)}
       className={clsx(
-        isPlaceholderData ? "bg-green/40" : "bg-green/80 hover:bg-green",
+        isPlaceholderData ? "bg-primary/40" : "bg-primary/80 hover:bg-primary",
         "shadow-md rounded-2xl overflow-hidden transition-transform hover:shadow-2xl flex flex-col cursor-pointer",
-        "h-full" // inherit container grid height
+        "h-full"
       )}>
       <CardHeader className="flex-0">
         <CardTitle
@@ -47,7 +47,7 @@ const BookSearchCard = ({
       <CardFooter className="flex-0">
         {doc.author_name && (
           <p
-            className="text-xs text-center text-light line-clamp-1 w-full"
+            className="text-xs text-center text-secondary line-clamp-1 w-full"
             title={doc.author_name.join(", ")}>
             {doc.author_name.join(", ")}
           </p>
