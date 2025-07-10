@@ -7,53 +7,49 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { type SetURLSearchParams } from "react-router-dom";
+import { getPaginationSlots } from "@/utils/getPaginationSlot";
+import { useLocation } from "react-router-dom";
 
 const PageNavigation = ({
   page,
-  setSearchParams,
+  searchParams,
+  maxPage,
 }: {
   page: number;
-  setSearchParams: SetURLSearchParams;
+  searchParams: URLSearchParams;
+  maxPage: number;
 }) => {
+  const { pathname } = useLocation();
+  const linkForPage = (target: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", target.toString());
+    return { pathname, search: `?${params.toString()}` };
+  };
+
+  const slots = getPaginationSlots(page, maxPage);
+
   return (
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious
-            href="#"
-            onClick={() =>
-              setSearchParams((params) => {
-                params.set("page", (page + 1).toString());
-                return params;
-              })
-            }
-          />
+          <PaginationPrevious to={linkForPage(Math.max(1, page - 1))} />
         </PaginationItem>
+
+        {slots.map((slot, i) =>
+          slot.isEllipsis ? (
+            <PaginationEllipsis key={`ellipsis-${i}`} />
+          ) : (
+            <PaginationLink
+              key={slot.page}
+              to={linkForPage(slot.page)}
+              isActive={slot.page === page}>
+              {slot.page}
+            </PaginationLink>
+          )
+        )}
+
         <PaginationItem>
-          <PaginationLink href="#" isActive>
-            {page}
-          </PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">{page + 1}</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">{page + 2}</PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationNext
-            onClick={() =>
-              setSearchParams((params) => {
-                params.set("page", (page + 1).toString());
-                return params;
-              })
-            }
-            href="#"
-          />
+          <PaginationNext to={linkForPage(Math.min(maxPage, page + 1))} />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

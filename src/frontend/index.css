@@ -27,15 +27,22 @@
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #697565;
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: #ecdfcc;
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --primary: #697565; /* earthy olive */
+  --primary-foreground: oklch(0.98 0.05 150);
+
+  --secondary: #ecdfcc; /* warm beige */
+  --secondary-foreground: oklch(0.26 0.05 50); /* warm brown for contrast */
+
+  --muted: oklch(0.92 0.03 120); /* desaturated pale green/gray */
+  --muted-foreground: oklch(
+    0.45 0.04 120
+  ); /* soft olive-gray, readable on muted */
+
+  --accent: #697565; /* rich desaturated olive-green */
+  --accent-foreground: oklch(
+    0.98 0.02 135
+  ); /* soft near-white with a slight tint */
+
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
