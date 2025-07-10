@@ -24,7 +24,7 @@ const BooksSearch = () => {
         :
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 mt-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 auto-rows-fr">
         {isPending
           ? Array.from({ length: maxResults }).map((__, i) => (
               <BookCardLoader key={i} />
