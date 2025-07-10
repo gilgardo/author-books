@@ -8,10 +8,10 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 const NavBar = ({ reset }: { reset?: () => void }) => {
   const { isAuth } = useAuth();
   return (
-    <nav className="relative z-40 flex justify-between h-15 bg-green/80 backdrop-blur-md shadow-md">
+    <nav className="relative z-40 flex justify-between py-3 bg-primary/80 backdrop-blur-md shadow-md">
       <div className="flex justify-between items-center gap-5 md:gap-10 ml-5 md:ml-40">
         <Link to="/">
-          <BookOpenIcon className="text-light size-6" />
+          <BookOpenIcon className="text-secondary size-6" />
         </Link>
         <NavLink to="/">Home</NavLink>
         <NavLink to="/info">Info</NavLink>

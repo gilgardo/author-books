@@ -17,7 +17,7 @@ const ViewerIcon = ({
       <Icon
         className={`${
           isLoaded
-            ? "sm:text-light text-green/80 cursor-pointer"
+            ? "sm:text-secondary text-primary/80 cursor-pointer"
             : "text-transparent"
         } size-7`}
       />
