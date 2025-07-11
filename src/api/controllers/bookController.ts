@@ -1,22 +1,31 @@
-import type { Request, Response } from "express";
-import { axiosWithUserAgent } from "../customAxios";
+import { maxResults } from "@/data/maxResults";
+import { proxyHandler, type Params } from "../utils/proxieHandler";
 
-const BASE_URL = "https://openlibrary.org/works";
+const WORK_URL = "https://openlibrary.org/works";
+const BOOKS_URL = "https://openlibrary.org/search.json";
+const EDICTION_URL = "https://openlibrary.org/books";
 
-export async function searchBook(req: Request, res: Response) {
-  const { key } = req.query;
-  if (!key) {
-    return res.status(400).json({ error: "Missing key" });
+export const searchBook = proxyHandler(
+  "Failed to fetch book",
+  [{ key: "key", isRequired: true }],
+  (params: Params) => `${WORK_URL}/${params.key}.json`
+);
+
+export const searchBooks = proxyHandler(
+  "Failed to fetch books",
+  [
+    { key: "q", isRequired: true },
+    { key: "page", isRequired: false, defaultValue: "1" },
+    { key: "limit", isRequired: false, defaultValue: maxResults.toString() },
+  ],
+  (params: Params) => {
+    const url = new URLSearchParams(params);
+    return `${BOOKS_URL}?${url}`;
   }
+);
 
-  try {
-    const url = `${BASE_URL}/${key}.json`;
-
-    const response = await axiosWithUserAgent.get(url);
-
-    res.json(response.data);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to fetch book" });
-  }
-}
+export const searchEdiction = proxyHandler(
+  "Failed to fetch ediction",
+  [{ key: "key", isRequired: true }],
+  (params: Params) => `${EDICTION_URL}/${params.key}.json`
+);

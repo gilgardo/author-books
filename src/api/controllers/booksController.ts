@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { maxResults } from "../../data/maxResults.ts";
-import { axiosWithUserAgent } from "../customAxios.ts";
+import { axiosWithUserAgent } from "../utils/customAxios.ts";
 
 const BASE_URL = "https://openlibrary.org/search.json";
 

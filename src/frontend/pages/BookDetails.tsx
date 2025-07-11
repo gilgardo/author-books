@@ -75,36 +75,37 @@ const BookDetails = () => {
               </div>
             )}
 
-            {/* <div className="grkey grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
-              {doc.?.length > 0 && (
+            <div className="grkey grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
+              {/* {doc?.length > 0 && (
                 <p>
                   <span className="font-medium text-foreground">Publisher:</span>{" "}
                   {doc.publisher.join(", ")}
                 </p>
-              )}
+              )} */}
 
               {doc.first_publish_year && (
                 <p>
-                  <span className="font-medium text-foreground">Published:</span>{" "}
+                  <span className="font-medium text-foreground">
+                    Published:
+                  </span>{" "}
                   {doc.first_publish_year}
                 </p>
               )}
 
-              {doc.subject?.length > 0 && (
+              {/* {work.subjects && (
                 <p>
                   <span className="font-medium text-foreground">Subjects:</span>{" "}
-                  {doc.subject.slice(0, 5).join(", ")}
+                  {work.subjects}
                 </p>
-              )}
+              )} */}
 
-              {doc.number_of_pages_median && (
+              {/* {doc.number_of_pages_median && (
                 <p>
                   <span className="font-medium text-foreground">Pages:</span>{" "}
                   {doc.number_of_pages_median}
                 </p>
-              )}
-            </div> */}
-
+              )} */}
+            </div>
             <div>
               <a
                 href={`https://openlibrary.org${doc.key}`}
