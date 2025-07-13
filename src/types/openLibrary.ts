@@ -63,3 +63,40 @@ export type OpenLibraryWork = {
     value: string;
   };
 };
+
+export type OpenLibraryEdition = {
+  works: {
+    key: string;
+  }[];
+  title: string;
+  publishers: string[];
+  publish_date: string;
+  key: string;
+  type: {
+    key: string;
+  };
+  identifiers: Record<string, string[]>;
+  ocaid?: string;
+  classifications: Record<string, unknown>;
+  subtitle?: string;
+  publish_places: string[];
+  edition_name?: string;
+  languages: {
+    key: string;
+  }[];
+  physical_format?: string;
+  number_of_pages?: number;
+  pagination?: string;
+  covers?: number[];
+  source_records?: string[];
+  latest_revision: number;
+  revision: number;
+  created: {
+    type: string;
+    value: string;
+  };
+  last_modified: {
+    type: string;
+    value: string;
+  };
+};

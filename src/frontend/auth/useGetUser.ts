@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import type { User } from "../auth/authContext";
+import type { User } from "./authContext";
 import api from "../../utils/api";
 
 const getUser = async () => {

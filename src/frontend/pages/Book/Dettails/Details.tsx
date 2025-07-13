@@ -1,8 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { useQueries, useQueryClient } from "@tanstack/react-query";
-import { getDocQueryOptions } from "../useQueryCustomHooks/useDocSearch";
-import { getWorkQueryOptions } from "../useQueryCustomHooks/useWorkSearch";
-import BookDetailLoader from "../loaders/BookDetailLoader";
+
 import coverUrlFactory from "@/utils/coverUrlFactory";
 import {
   Card,
@@ -11,6 +9,9 @@ import {
   CardContent,
   CardDescription,
 } from "@/components/ui/card";
+import DetailsLoader from "./DetailsLoader";
+import { getDocQueryOptions } from "./useDocSearch";
+import { getWorkQueryOptions } from "./useWorkSearch";
 
 const BookDetails = () => {
   const [searchParams] = useSearchParams();
@@ -29,7 +30,7 @@ const BookDetails = () => {
   const [docQuery, workQuery] = queries;
   const isPending = queries.some((query) => query.isPending);
 
-  if (isPending) return <BookDetailLoader />;
+  if (isPending) return <DetailsLoader />;
 
   const doc = docQuery.data;
   const work = workQuery.data;
@@ -75,36 +76,37 @@ const BookDetails = () => {
               </div>
             )}
 
-            {/* <div className="grkey grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
-              {doc.?.length > 0 && (
+            <div className="grkey grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
+              {/* {doc?.length > 0 && (
                 <p>
                   <span className="font-medium text-foreground">Publisher:</span>{" "}
                   {doc.publisher.join(", ")}
                 </p>
-              )}
+              )} */}
 
               {doc.first_publish_year && (
                 <p>
-                  <span className="font-medium text-foreground">Published:</span>{" "}
+                  <span className="font-medium text-foreground">
+                    Published:
+                  </span>{" "}
                   {doc.first_publish_year}
                 </p>
               )}
 
-              {doc.subject?.length > 0 && (
+              {/* {work.subjects && (
                 <p>
                   <span className="font-medium text-foreground">Subjects:</span>{" "}
-                  {doc.subject.slice(0, 5).join(", ")}
+                  {work.subjects}
                 </p>
-              )}
+              )} */}
 
-              {doc.number_of_pages_median && (
+              {/* {doc.number_of_pages_median && (
                 <p>
                   <span className="font-medium text-foreground">Pages:</span>{" "}
                   {doc.number_of_pages_median}
                 </p>
-              )}
-            </div> */}
-
+              )} */}
+            </div>
             <div>
               <a
                 href={`https://openlibrary.org${doc.key}`}

@@ -1,5 +1,9 @@
 import { Router, type RequestHandler } from "express";
-import { searchBook } from "../controllers/bookController";
+import {
+  searchBook,
+  searchEdiction,
+  searchBooks,
+} from "../controllers/bookControllers";
 
 export const router = Router();
 router.use(function (_, res, next) {
@@ -9,4 +13,6 @@ router.use(function (_, res, next) {
   );
   next();
 });
-router.get("/", searchBook as RequestHandler);
+router.get("/work", searchBook as RequestHandler);
+router.get("/ediction", searchEdiction as RequestHandler);
+router.get("/work", searchBooks as RequestHandler);

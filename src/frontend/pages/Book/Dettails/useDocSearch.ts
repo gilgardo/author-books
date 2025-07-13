@@ -4,9 +4,10 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { getBooksSearchQueryOptions } from "./useBooksSearch";
-import api from "../../utils/api";
-import type { OpenLibrarySearchResponse } from "../../types/openLibrary";
+import { getDocsSearchQueryOptions } from "../Search/useDocsSearch";
+import api from "../../../../utils/api";
+import type { OpenLibrarySearchResponse } from "../../../../types/openLibrary";
+import bookKeys from "../bookKeys";
 
 const searchDoc = async (
   q: string,
@@ -14,7 +15,7 @@ const searchDoc = async (
   key: string,
   signal: AbortSignal
 ) => {
-  const { data } = await api.get<OpenLibrarySearchResponse>(`/books/search`, {
+  const { data } = await api.get<OpenLibrarySearchResponse>(`/book/search`, {
     params: { q, page },
     signal,
   });
@@ -30,15 +31,14 @@ export function getDocQueryOptions(
 ) {
   return {
     ...queryOptions({
-      queryKey: ["book", "doc", { q, page }],
+      queryKey: bookKeys.doc(q, page, key),
       queryFn: ({ signal }) => searchDoc(q, page + 1, key, signal),
-      enabled: q !== "",
-      staleTime: 60 * 1000,
+      enabled: !!q,
     }),
     placeholderData: () => {
       if (q === "") return undefined;
       return queryClient
-        .getQueryData(getBooksSearchQueryOptions(q, page).queryKey)
+        .getQueryData(getDocsSearchQueryOptions(q, page).queryKey)
         ?.docs.find((doc) => doc.key.includes(key));
     },
   };

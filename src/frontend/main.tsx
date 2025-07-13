@@ -15,6 +15,7 @@ const queryClient = new QueryClient({
       throwOnError: (_, query) => {
         return typeof query.state.data === "undefined";
       },
+      staleTime: 60 * 100,
     },
   },
   queryCache: new QueryCache({

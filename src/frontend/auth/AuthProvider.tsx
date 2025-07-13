@@ -1,4 +1,4 @@
-import { useGetUser } from "../useQueryCustomHooks/useGetUser";
+import { useGetUser } from "./useGetUser";
 import { AuthContext } from "./authContext";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {

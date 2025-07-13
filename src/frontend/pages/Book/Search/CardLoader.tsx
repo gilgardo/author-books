@@ -1,4 +1,4 @@
-const BookCardLoader = () => {
+const CardLoader = () => {
   return (
     <div className="bg-primary/40 shadow-md rounded-2xl overflow-hidden animate-pulse flex flex-col justify-between p-4 min-h-[320px]">
       <div className="flex flex-col items-center text-center">
@@ -10,4 +10,4 @@ const BookCardLoader = () => {
   );
 };
 
-export default BookCardLoader;
+export default CardLoader;
