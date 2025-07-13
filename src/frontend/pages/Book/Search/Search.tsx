@@ -4,7 +4,7 @@ import { maxResults } from "@/data/maxResults.ts";
 import { useNavigateToParams } from "@/frontend/customHooks/useNavigateToParams";
 import CardLoader from "./CardLoader";
 import SearchCard from "./SearchCard";
-import { useBooksSearch } from "./useBooksSearch";
+import { useDocsSearch } from "./useDocsSearch";
 import PageNavigation from "@/frontend/components/PageNavigation";
 
 const BooksSearch = () => {
@@ -12,7 +12,7 @@ const BooksSearch = () => {
   const query = searchParams.get("q") || "";
   const page = Number(searchParams.get("page") || 1);
   const navigateToBookDetails = useNavigateToParams("/book");
-  const { data, isPending, isPlaceholderData } = useBooksSearch(query, page);
+  const { data, isPending, isPlaceholderData } = useDocsSearch(query, page);
   const maxPage = Math.min(Math.floor((data?.numFound ?? 0) / maxResults), 100);
 
   const handleClick = (key: string) =>

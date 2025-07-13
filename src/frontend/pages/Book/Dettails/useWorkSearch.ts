@@ -4,7 +4,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { getBooksSearchQueryOptions } from "../Search/useBooksSearch";
+import { getDocsSearchQueryOptions } from "../Search/useDocsSearch";
 import api from "../../../../utils/api";
 import type { OpenLibraryWork } from "@/types/openLibrary";
 
@@ -23,13 +23,13 @@ export function getWorkQueryOptions(
   return queryOptions({
     queryKey: ["book", "work", { key }],
     queryFn: () => searchWork(key),
-    staleTime: 100,
+    staleTime: 1000,
     placeholderData: () => {
       if (!page || !q) return undefined;
       if (q === "") return undefined;
       const searchData = queryClient
-        .getQueryData(getBooksSearchQueryOptions(q, page).queryKey)
-        ?.docs.find((dock) => dock.key.includes(key));
+        .getQueryData(getDocsSearchQueryOptions(q, page).queryKey)
+        ?.docs.find((doc) => doc.key.includes(key));
       if (!searchData) return undefined;
       return {
         title: searchData.title,

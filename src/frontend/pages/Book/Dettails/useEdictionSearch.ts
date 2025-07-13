@@ -1,6 +1,7 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
-import api from "../../utils/api";
-import type { OpenLibraryEdition } from "../../types/openLibrary";
+import api from "../../../../utils/api";
+import type { OpenLibraryEdition } from "../../../../types/openLibrary";
+import bookKeys from "../bookKeys";
 
 const searchEdiction = async (key: string) => {
   const { data } = await api.get<OpenLibraryEdition>(`/books/ediction`, {
@@ -13,10 +14,9 @@ const searchEdiction = async (key: string) => {
 export function getEdictionQueryOptions(key: string) {
   return {
     ...queryOptions({
-      queryKey: ["book", "ediction", { key }],
+      queryKey: bookKeys.ediction(key),
       queryFn: () => searchEdiction(key),
       enabled: !!key,
-      staleTime: 60 * 1000,
     }),
   };
 }

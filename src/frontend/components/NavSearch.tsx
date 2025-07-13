@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { useDebounce } from "@uidotdev/usehooks";
 import { toggle } from "../../utils/toggleBolean";
-import { useBooksSearch } from "../pages/Book/Search/useBooksSearch";
+import { useDocsSearch } from "../pages/Book/Search/useDocsSearch";
 import type { BookDetailsParams, BooksSearchParams } from "../../types/params";
 import { useNavigateToParams } from "../customHooks/useNavigateToParams";
 import clsx from "clsx";
@@ -33,7 +33,7 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
       },
     });
 
-  const { data } = useBooksSearch(debouncedSearch, 0);
+  const { data } = useDocsSearch(debouncedSearch, 0);
   const suggestionListData = data?.docs?.slice(0, 5);
   const isSuggestionListOpen =
     isActive &&
