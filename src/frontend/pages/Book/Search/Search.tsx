@@ -1,10 +1,11 @@
 import { useSearchParams } from "react-router-dom";
-import { useBooksSearch } from "../useQueryCustomHooks/useBooksSearch.ts";
-import { useNavigateToParams } from "../customHooks/useNavigateToParams.ts";
-import BookSearchCard from "../components/BookSearchCard.tsx";
-import PageNavigation from "../components/PageNavigation.tsx";
-import BookCardLoader from "../loaders/BooksSearchLoader.tsx";
+
 import { maxResults } from "@/data/maxResults.ts";
+import { useNavigateToParams } from "@/frontend/customHooks/useNavigateToParams";
+import CardLoader from "./CardLoader";
+import SearchCard from "./SearchCard";
+import { useBooksSearch } from "./useBooksSearch";
+import PageNavigation from "@/frontend/components/PageNavigation";
 
 const BooksSearch = () => {
   const [searchParams] = useSearchParams();
@@ -27,10 +28,10 @@ const BooksSearch = () => {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 auto-rows-fr">
         {isPending
           ? Array.from({ length: maxResults }).map((__, i) => (
-              <BookCardLoader key={i} />
+              <CardLoader key={i} />
             ))
           : data?.docs.map((doc) => (
-              <BookSearchCard
+              <SearchCard
                 key={doc.key}
                 doc={doc}
                 handleClick={handleClick}

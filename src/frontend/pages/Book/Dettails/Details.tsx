@@ -1,8 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { useQueries, useQueryClient } from "@tanstack/react-query";
-import { getDocQueryOptions } from "../useQueryCustomHooks/useDocSearch";
-import { getWorkQueryOptions } from "../useQueryCustomHooks/useWorkSearch";
-import BookDetailLoader from "../loaders/BookDetailLoader";
+
 import coverUrlFactory from "@/utils/coverUrlFactory";
 import {
   Card,
@@ -11,6 +9,9 @@ import {
   CardContent,
   CardDescription,
 } from "@/components/ui/card";
+import DetailsLoader from "./DetailsLoader";
+import { getDocQueryOptions } from "./useDocSearch";
+import { getWorkQueryOptions } from "./useWorkSearch";
 
 const BookDetails = () => {
   const [searchParams] = useSearchParams();
@@ -29,7 +30,7 @@ const BookDetails = () => {
   const [docQuery, workQuery] = queries;
   const isPending = queries.some((query) => query.isPending);
 
-  if (isPending) return <BookDetailLoader />;
+  if (isPending) return <DetailsLoader />;
 
   const doc = docQuery.data;
   const work = workQuery.data;

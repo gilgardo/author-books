@@ -1,20 +1,21 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home";
-import BooksSearch from "./pages/BooksSearch";
-import BookDetails from "./pages/BookDetails";
+
 import Info from "./pages/Info";
 import MainLayout from "./layouts/MainLayout";
 import BookViewer from "./pages/Bookviewer";
-import SignUp from "./pages/SignUp";
-import SignIn from "./pages/SignIn";
+import SignUp from "./pages/Sign/SignUp";
+import SignIn from "./pages/Sign/SignIn";
+import Search from "./pages/Book/Search/Search";
+import Details from "./pages/Book/Dettails/Details";
 
 const router = createBrowserRouter([
   {
     element: <MainLayout />,
     children: [
       { path: "/", element: <Home /> },
-      { path: "books/search", element: <BooksSearch /> },
-      { path: "book", element: <BookDetails /> },
+      { path: "books/search", element: <Search /> },
+      { path: "book", element: <Details /> },
       { path: "book/:id/view", element: <BookViewer /> },
       { path: "info", element: <Info /> },
       { path: "signIn", element: <SignIn /> },

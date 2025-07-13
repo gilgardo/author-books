@@ -1,17 +1,17 @@
 import { maxResults } from "@/data/maxResults";
-import { proxyHandler, type Params } from "../utils/proxieHandler";
+import { openlibraryProxyHandler, type Params } from "../utils/proxieHandler";
 
 const WORK_URL = "https://openlibrary.org/works";
 const BOOKS_URL = "https://openlibrary.org/search.json";
 const EDICTION_URL = "https://openlibrary.org/books";
 
-export const searchBook = proxyHandler(
+export const searchBook = openlibraryProxyHandler(
   "Failed to fetch book",
   [{ key: "key", isRequired: true }],
   (params: Params) => `${WORK_URL}/${params.key}.json`
 );
 
-export const searchBooks = proxyHandler(
+export const searchBooks = openlibraryProxyHandler(
   "Failed to fetch books",
   [
     { key: "q", isRequired: true },
@@ -24,7 +24,7 @@ export const searchBooks = proxyHandler(
   }
 );
 
-export const searchEdiction = proxyHandler(
+export const searchEdiction = openlibraryProxyHandler(
   "Failed to fetch ediction",
   [{ key: "key", isRequired: true }],
   (params: Params) => `${EDICTION_URL}/${params.key}.json`

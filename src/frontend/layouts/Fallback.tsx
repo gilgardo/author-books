@@ -1,5 +1,5 @@
 import type { FallbackProps } from "react-error-boundary";
-import MainWraper from "../layouts/MainWraper";
+import MainWraper from "./MainWraper";
 
 const Fallback = ({ error, resetErrorBoundary }: FallbackProps) => {
   return (

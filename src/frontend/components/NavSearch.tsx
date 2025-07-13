@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { useDebounce } from "@uidotdev/usehooks";
 import { toggle } from "../../utils/toggleBolean";
-import { useBooksSearch } from "../useQueryCustomHooks/useBooksSearch";
+import { useBooksSearch } from "../pages/Book/Search/useBooksSearch";
 import type { BookDetailsParams, BooksSearchParams } from "../../types/params";
 import { useNavigateToParams } from "../customHooks/useNavigateToParams";
 import clsx from "clsx";

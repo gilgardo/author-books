@@ -4,12 +4,12 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { getBooksSearchQueryOptions } from "./useBooksSearch";
-import api from "../../utils/api";
+import { getBooksSearchQueryOptions } from "../Search/useBooksSearch";
+import api from "../../../../utils/api";
 import type { OpenLibraryWork } from "@/types/openLibrary";
 
 const searchWork = async (key: string) => {
-  const { data } = await api.get(`/book`, { params: { key } });
+  const { data } = await api.get("/book/work", { params: { key } });
 
   return data as OpenLibraryWork;
 };
@@ -21,7 +21,7 @@ export function getWorkQueryOptions(
   page?: number
 ) {
   return queryOptions({
-    queryKey: ["book", { key }],
+    queryKey: ["book", "work", { key }],
     queryFn: () => searchWork(key),
     staleTime: 100,
     placeholderData: () => {

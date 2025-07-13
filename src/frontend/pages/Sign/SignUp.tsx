@@ -7,9 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import useSignForm from "../signForm/useSignForm";
-import useSign from "../useQueryCustomHooks/useSign";
-import { useAuth } from "../auth/useAuth";
+import useSignForm from "./signForm/useSignForm";
+import useSign from "./useSign";
+import { useAuth } from "../../auth/useAuth";
 import { Link, Navigate } from "react-router-dom";
 
 const SignUp = () => {

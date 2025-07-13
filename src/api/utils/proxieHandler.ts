@@ -1,5 +1,5 @@
+import axios from "axios";
 import type { NextFunction, Request, Response } from "express";
-import { axiosWithUserAgent } from "./customAxios";
 
 export type Params = Record<string, string>;
 type ParamEntry =
@@ -7,7 +7,7 @@ type ParamEntry =
   | { key: string; isRequired: false; defaultValue: string };
 type ParamMap = ParamEntry[];
 
-export function proxyHandler(
+export function openlibraryProxyHandler(
   errorMessage: string,
   paramsMap: ParamMap = [],
   buildQuery: (queryReq: Params) => string,
@@ -36,7 +36,12 @@ export function proxyHandler(
     const url = buildQuery(params);
 
     try {
-      const { data } = await axiosWithUserAgent.get(url);
+      const { data } = await axios.get(url, {
+        headers: {
+          "User-Agent": "Author-books/1.0 (alessandro.foresta.dev@gmail.com)",
+          Accept: "application/json",
+        },
+      });
       if (isNext) {
         res.locals.proxyData = data;
         return next();
