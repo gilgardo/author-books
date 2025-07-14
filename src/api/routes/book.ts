@@ -1,18 +1,26 @@
-import { Router, type RequestHandler } from "express";
+import { Router } from "express";
 import {
-  searchBook,
+  searchDoc,
   searchEdiction,
-  searchBooks,
+  searchDocs,
+  searchWork,
 } from "../controllers/bookControllers";
+import type { OpenLibrarySearchDoc } from "@/types/openLibrary";
 
 export const router = Router();
-router.use(function (_, res, next) {
-  res.setHeader(
-    "User-Agent",
-    "Author-books/1.0 (alessandro.foresta.dev@gmail.com)"
+
+router.get("/work/:key", searchWork);
+router.get("/ediction/:key", searchEdiction);
+router.get("/docs", searchDocs);
+router.get("/doc/:key", searchDoc, async (_, res): Promise<void> => {
+  const { proxyData, params } = res.locals;
+  const doc = proxyData?.docs.find((doc: OpenLibrarySearchDoc | undefined) =>
+    doc?.key?.includes(params.key)
   );
-  next();
+  if (!doc) {
+    res.status(500).json({ error: "Doc not found" });
+    return;
+  }
+
+  res.json(doc);
 });
-router.get("/work", searchBook as RequestHandler);
-router.get("/ediction", searchEdiction as RequestHandler);
-router.get("/work", searchBooks as RequestHandler);

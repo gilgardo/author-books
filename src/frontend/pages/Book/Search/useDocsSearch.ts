@@ -1,21 +1,10 @@
 import { queryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import api from "../../../../utils/api";
-import type { OpenLibrarySearchResponse } from "@/types/openLibrary";
-import bookKeys from "../bookKeys";
-const searchDocs = async (q: string, page: number, signal: AbortSignal) => {
-  const { data } = await api.get(`/book/search`, {
-    params: { q, page },
-    signal,
-  });
-
-  return data as OpenLibrarySearchResponse;
-};
+import books from "../bookKeys";
 
 export function getDocsSearchQueryOptions(q: string, page: number) {
   return queryOptions({
-    queryKey: bookKeys.docs(q, page),
-    queryFn: ({ signal }) => searchDocs(q, page + 1, signal),
+    ...books.docs(q, page + 1),
     enabled: !!q,
   });
 }
