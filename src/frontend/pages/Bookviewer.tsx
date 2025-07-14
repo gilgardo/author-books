@@ -12,7 +12,7 @@ import ViewerIcon from "../components/ViewerIcon";
 import { ErrorBoundary } from "react-error-boundary";
 import ViewerFallback from "../components/ViewerFallback";
 import clsx from "clsx";
-import BookViewerLoader from "../loaders/BookViewerLoader";
+
 class MissingIdError extends Error {
   type: string;
   constructor(message = "No ID provided") {
@@ -43,7 +43,6 @@ const BookViewer = () => {
   const viewer = useGoogleBooks(viewerRef, id);
   const [pageState, handlePageState] = useLocalStorage(id, "");
   const [isLoaded, setIsLoaded] = useState(false);
-
   const handleRefresh = () => {
     const isRefreshTried = sessionStorage.getItem("isRefreshTried");
     if (isRefreshTried !== "true") {
@@ -168,7 +167,6 @@ const BookViewer = () => {
             !isLoaded && "invisible absolute pointer-events-none"
           )}
         />
-        {!isLoaded && <BookViewerLoader />}
       </div>
     </ErrorBoundary>
   );

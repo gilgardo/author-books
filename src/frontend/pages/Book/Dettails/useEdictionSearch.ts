@@ -1,21 +1,10 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
-import api from "../../../../utils/api";
-import type { OpenLibraryEdition } from "../../../../types/openLibrary";
-import bookKeys from "../bookKeys";
-
-const searchEdiction = async (key: string) => {
-  const { data } = await api.get<OpenLibraryEdition>(`/books/ediction`, {
-    params: { key },
-  });
-
-  return data;
-};
+import books from "../bookKeys";
 
 export function getEdictionQueryOptions(key: string) {
   return {
     ...queryOptions({
-      queryKey: bookKeys.ediction(key),
-      queryFn: () => searchEdiction(key),
+      ...books.ediction(key),
       enabled: !!key,
     }),
   };
