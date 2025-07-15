@@ -4,7 +4,8 @@ export type BooksSearchParams = {
 };
 
 export type BookDetailsParams = {
-  key: string;
+  workKey: string;
+  editionKey: string;
   q?: string;
   page?: string;
 };

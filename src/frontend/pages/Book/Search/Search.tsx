@@ -15,8 +15,13 @@ const BooksSearch = () => {
   const { data, isPending, isPlaceholderData } = useDocsSearch(query, page);
   const maxPage = Math.min(Math.floor((data?.numFound ?? 0) / maxResults), 100);
 
-  const handleClick = (key: string) =>
-    navigateToBookDetails({ q: query, page: page.toString(), key });
+  const handleClick = (workKey: string, editionKey: string) =>
+    navigateToBookDetails({
+      q: query,
+      page: page.toString(),
+      workKey,
+      editionKey,
+    });
 
   return (
     <>

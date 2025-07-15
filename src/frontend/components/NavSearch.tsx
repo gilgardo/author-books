@@ -33,7 +33,7 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
       },
     });
 
-  const { data } = useDocsSearch(debouncedSearch, 0);
+  const { data } = useDocsSearch(debouncedSearch, 1);
   const suggestionListData = data?.docs?.slice(0, 5);
   const isSuggestionListOpen =
     isActive &&
@@ -160,7 +160,8 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
               tabIndex={0}
               onClick={() =>
                 navigateToBookDetails({
-                  key: doc.key.replace("/works/", ""),
+                  workKey: doc.key.replace("/works/", ""),
+                  editionKey: doc.cover_edition_key ?? "",
                   q: search,
                 })
               }
@@ -170,7 +171,8 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
                   suggestionListData?.length ?? 0 + 1,
                   () =>
                     navigateToBookDetails({
-                      key: doc.key.replace("/works/", ""),
+                      workKey: doc.key.replace("/works/", ""),
+                      editionKey: doc.cover_edition_key ?? "",
                       q: search,
                     }),
                   isSuggestionListOpen

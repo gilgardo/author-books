@@ -1,10 +1,10 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import books from "../bookKeys";
 
-export function getEdictionQueryOptions(key: string) {
+export function getEditionQueryOptions(key: string) {
   return {
     ...queryOptions({
-      ...books.ediction(key),
+      ...books.edition(key),
       enabled: !!key,
     }),
   };
@@ -12,6 +12,6 @@ export function getEdictionQueryOptions(key: string) {
 
 export const useEdictionSearch = (key: string) => {
   return useQuery({
-    ...getEdictionQueryOptions(key),
+    ...getEditionQueryOptions(key),
   });
 };

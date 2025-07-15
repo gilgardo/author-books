@@ -15,14 +15,14 @@ const BookSearchCard = ({
   isPlaceholderData,
 }: {
   doc: OpenLibrarySearchDoc;
-  handleClick: (key: string) => void;
+  handleClick: (workKey: string, editionKey: string) => void;
   isPlaceholderData: boolean;
 }) => {
   const key = doc.key.replace("/works/", "");
 
   return (
     <Card
-      onClick={() => handleClick(key)}
+      onClick={() => handleClick(key, doc.cover_edition_key ?? "")}
       className={clsx(
         isPlaceholderData ? "bg-primary/40" : "bg-primary/80 hover:bg-primary",
         "shadow-md rounded-2xl overflow-hidden transition-transform hover:shadow-2xl flex flex-col cursor-pointer",
