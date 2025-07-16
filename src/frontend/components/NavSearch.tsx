@@ -7,6 +7,7 @@ import type { BookDetailsParams, BooksSearchParams } from "../../types/params";
 import { useNavigateToParams } from "../customHooks/useNavigateToParams";
 import clsx from "clsx";
 import coverUrlFactory from "@/utils/coverUrlFactory";
+import { Input } from "@/components/ui/input";
 
 const NavSearch = ({ reset }: { reset?: () => void }) => {
   const [isActive, setIsActive] = useState(false);
@@ -42,9 +43,8 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
     debouncedSearch.length > 3;
 
   useEffect(() => {
-    if (!isActive || !isSuggestionListOpen) {
-      return;
-    }
+    if (!isSuggestionListOpen) return;
+
     if (focusIndex === 0) {
       inputRef.current?.focus();
       return;
@@ -53,7 +53,13 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
       focusIndex - 1
     ) as HTMLElement;
     nextSuggestion.focus();
-  }, [isActive, focusIndex, isSuggestionListOpen]);
+  }, [focusIndex, isSuggestionListOpen]);
+
+  useEffect(() => {
+    if (!isActive) return;
+
+    inputRef.current?.focus();
+  }, [isActive]);
 
   const handleBlur = (e: React.FocusEvent) => {
     const relatedTarget = e.relatedTarget;
@@ -73,40 +79,40 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
     enterFn: () => void,
     shouldExecute: boolean | undefined
   ) => {
-    const events = ["Enter", "Tab", "ArrowDown", "ArrowUp"];
-
-    if (!events.includes(e.key)) return;
-
-    if (e.key === "Enter") {
-      enterFn();
-    }
-    if (!shouldExecute) return;
-    e.preventDefault();
-
     const incrementFocus = (inc: number) => {
       setFocusIndex((prevIndex) => {
-        if (prevIndex === maxLength) return 0;
-        if (prevIndex + inc === 0) return maxLength;
+        if (prevIndex + inc === maxLength + 1) return 0;
+        if (prevIndex + inc === -1) return maxLength;
         return prevIndex + inc;
       });
     };
-    if (e.key === "Tab") {
-      incrementFocus(1);
-    }
-    if (e.key === "ArrowDown") {
-      incrementFocus(1);
-    }
-    if (e.key === "ArrowUp") {
-      incrementFocus(-1);
+    switch (e.key) {
+      case "Enter":
+        if (!shouldExecute) break;
+        e.preventDefault();
+        enterFn();
+        break;
+
+      case "Tab":
+      case "ArrowDown":
+        e.preventDefault();
+        incrementFocus(1);
+        break;
+
+      case "ArrowUp":
+        e.preventDefault();
+        incrementFocus(-1);
+        break;
+      default:
+        return;
     }
   };
-
   return (
     <div className="relative h-auto z-50">
       <div
         className={clsx(
           "flex items-center bg-secondary rounded-full h-8 transition-all duration-300",
-          isActive ? "w-55" : "w-8"
+          isActive ? "w-40 md:w-55" : "w-8"
         )}
         tabIndex={-1}>
         {isActive && (
@@ -114,11 +120,11 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
             <MagnifyingGlassIcon
               tabIndex={0}
               onClick={() => navigateToBookSearch({ q: search })}
-              className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-dark cursor-pointer z-10 focus:outline-none"
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 cursor-pointer z-10 focus:outline-none"
               ref={searchRef}
             />
 
-            <input
+            <Input
               ref={inputRef}
               type="text"
               value={search}
@@ -134,7 +140,7 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
                 )
               }
               placeholder="Search..."
-              className="bg-trasparent pl-3 pr-7 py-1 text-sm outline-none focus:ring-2 focus:ring-black rounded-full w-full animate-fadeIn"
+              className=" pl-3 pr-7 py-1 text-sm rounded-full w-full animate-fadeIn ocus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[1px]"
             />
           </div>
         )}

@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "backend:dev": "ts-node --esm src/api/server.ts"
+    "back": "npx tsx src/api/server.ts"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",

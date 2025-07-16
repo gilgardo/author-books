@@ -1,37 +1,36 @@
-const BookDetailLoader = () => {
+import { Card } from "@/components/ui/card";
+
+const BookDetailsLoader = () => {
   return (
-    <div className="animate-pulse px-4 md:px-10 py-8">
-      <div className="h-8 w-64 bg-primary/40 rounded mb-6" />
+    <Card className="m-auto px-6 py-8 shadow-xl w-full md:w-[80%] lg:w-[60%] overflow-y-auto overflow-x-hidden flex flex-col justify-start animate-pulse space-y-6">
+      <div className="h-8 w-3/4 bg-primary/40 rounded mb-4 mx-auto" />
 
-      <div className="flex flex-col lg:flex-row gap-8">
-        <div className="flex flex-col items-center lg:items-start">
-          <div className="w-60 h-80 bg-primary/30 rounded-md shadow-md mb-4" />
-        </div>
-
-        <div className="flex-1 space-y-4">
-          <div className="space-y-2">
-            <div className="h-6 w-40 bg-primary/30 rounded" />
-            <div className="h-4 w-full bg-primary/20 rounded" />
-            <div className="h-4 w-11/12 bg-primary/20 rounded" />
-            <div className="h-4 w-10/12 bg-primary/20 rounded" />
-          </div>
-
-          <div className="space-y-2 pt-6">
-            <div className="h-4 w-1/2 bg-primary/20 rounded" />
-            <div className="h-4 w-1/3 bg-primary/20 rounded" />
-            <div className="h-4 w-2/5 bg-primary/20 rounded" />
-            <div className="h-4 w-1/4 bg-primary/20 rounded" />
-            <div className="h-4 w-1/3 bg-primary/20 rounded" />
-          </div>
-        </div>
-        <div className="flex-1 space-y-4">
-          <div className="h-6 w-36 bg-primary/30 rounded" />
-          <div className="h-10 w-40 bg-primary/20 rounded" />
-          <div className="h-10 w-40 bg-primary/20 rounded" />
+      <div className="flex flex-col md:flex-row justify-between gap-5">
+        <div className="w-[20rem] h-[30rem] bg-primary/30 rounded-lg shadow-md" />
+        <div className="flex flex-col justify-end space-y-4 w-full">
+          <div className="h-4 w-1/2 bg-primary/20 rounded" />
+          <div className="h-4 w-1/3 bg-primary/20 rounded" />
+          <div className="h-4 w-1/4 bg-primary/20 rounded" />
         </div>
       </div>
-    </div>
+
+      <div className="space-y-3">
+        <div className="h-6 w-36 bg-primary/30 rounded" />
+        <div className="space-y-2">
+          <div className="h-4 w-full bg-primary/20 rounded" />
+          <div className="h-4 w-11/12 bg-primary/20 rounded" />
+          <div className="h-4 w-10/12 bg-primary/20 rounded" />
+          <div className="h-4 w-9/12 bg-primary/20 rounded" />
+          <div className="h-4 w-3/4 bg-primary/20 rounded" />
+        </div>
+      </div>
+
+      <div className="flex items-center justify-around mt-4">
+        <div className="h-5 w-32 bg-primary/20 rounded" />
+        <div className="h-10 w-24 bg-primary/30 rounded" />
+      </div>
+    </Card>
   );
 };
 
-export default BookDetailLoader;
+export default BookDetailsLoader;
