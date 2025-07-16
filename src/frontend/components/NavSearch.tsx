@@ -186,11 +186,7 @@ const NavSearch = ({ reset }: { reset?: () => void }) => {
               }
               onMouseEnter={() => setFocusIndex(index + 1)}>
               <img
-                src={
-                  doc.cover_i
-                    ? coverUrlFactory(doc.cover_i).S
-                    : "/default_book_cover.jpg"
-                }
+                src={coverUrlFactory(doc.cover_i, doc.ia?.[0]).S}
                 alt={doc.title}
                 className="h-10 w-6 rounded-md object-cover shrink-0"
               />

@@ -28,13 +28,13 @@ const BooksSearch = () => {
       editionKey,
     });
 
-  const handlePrefetch = (workKey: string, edidionKey: string) => {
+  const handlePrefetch = (workKey: string, editionKey: string) => {
     const doc = data?.docs.find((doc) => doc.key.includes(workKey));
     if (!doc) return;
-
     queryClient.setQueryData(books.doc(query, page, workKey).queryKey, doc);
     queryClient.prefetchQuery(getWorkQueryOptions(workKey));
-    queryClient.prefetchQuery(getEditionQueryOptions(edidionKey));
+    if (editionKey !== "")
+      queryClient.prefetchQuery(getEditionQueryOptions(editionKey));
   };
 
   return (

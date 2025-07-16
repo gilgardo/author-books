@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useQueries, useQueryClient } from "@tanstack/react-query";
 import ReactMarkdown from "react-markdown";
 import coverUrlFactory from "@/utils/coverUrlFactory";
@@ -33,7 +33,7 @@ const BookDetails = () => {
   });
 
   const [docQuery, workQuery, editionQuery] = queries;
-  const isPending = queries.some((query) => query.isPending);
+  const isPending = docQuery.isPending || workQuery.isPending;
 
   if (isPending) return <DetailsLoader />;
 
@@ -41,19 +41,26 @@ const BookDetails = () => {
   const work = workQuery.data;
   const edition = editionQuery.data;
 
-  if (!work || !doc || !edition) return <p>Book not found.</p>;
+  if (!doc) return <p>Book not found.</p>;
+
+  const search =
+    "?" +
+    new URLSearchParams({
+      ocaid: doc.ia?.[0] ?? "",
+      title: doc.title,
+    }).toString();
 
   return (
     <Card className="m-auto px-6 py-8  shadow-xl  w-full md:w-[80%] lg:w-[60%] overflow-y-auto overflow-x-hidden flex flex-col justify-start">
       <CardHeader className="flex flex-col items-center justify-center">
         <CardTitle className="text-3xl font-bold text-primary mb-4">
-          {work.title}
+          {doc.title}
         </CardTitle>
       </CardHeader>
       <div className="flex flex-col  md:flex-row justify-between gap-5">
         <img
-          src={coverUrlFactory(work.covers?.[0]).L}
-          alt={work.title}
+          src={coverUrlFactory(doc.cover_i, doc.ia?.[0]).L}
+          alt={doc.title}
           className="w-[20rem] h-[30rem] object-cover rounded-lg border shadow"
         />
         <CardDescription className="text-muted-foreground md:self-end">
@@ -63,7 +70,7 @@ const BookDetails = () => {
               {doc.author_name.join(", ")}
             </p>
           )}
-          {edition.publishers?.length > 0 && (
+          {edition && edition.publishers?.length > 0 && (
             <p>
               <span className="font-medium text-foreground">Publisher:</span>{" "}
               {edition.publishers.join(", ")}
@@ -78,24 +85,28 @@ const BookDetails = () => {
         </CardDescription>
       </div>
 
-      <CardContent className=" h-full flex-1 p-0 space-y-4 text-sm text-muted-foreground">
-        {work.description && (
-          <>
-            <h2 className="text-lg font-semibold text-foreground mb-1">
-              Description
-            </h2>
-            <ScrollArea className="h-[70%] w-full pr-3">
-              <div className="leading-relaxed">
-                {typeof work.description === "string" ? (
-                  <ReactMarkdown>{work.description}</ReactMarkdown>
-                ) : (
-                  <ReactMarkdown>{work.description?.value ?? ""}</ReactMarkdown>
-                )}
-              </div>
-            </ScrollArea>
-          </>
-        )}
-      </CardContent>
+      {work && (
+        <CardContent className=" h-full flex-1 p-0 space-y-4 text-sm text-muted-foreground">
+          {work.description && (
+            <>
+              <h2 className="text-lg font-semibold text-foreground mb-1">
+                Description
+              </h2>
+              <ScrollArea className="h-[70%] w-full pr-3">
+                <div className="leading-relaxed">
+                  {typeof work.description === "string" ? (
+                    <ReactMarkdown>{work.description}</ReactMarkdown>
+                  ) : (
+                    <ReactMarkdown>
+                      {work.description?.value ?? ""}
+                    </ReactMarkdown>
+                  )}
+                </div>
+              </ScrollArea>
+            </>
+          )}
+        </CardContent>
+      )}
       <div className="flex items-center justify-around">
         <a
           href={`https://openlibrary.org${doc.key}`}
@@ -106,13 +117,12 @@ const BookDetails = () => {
         </a>
         {doc.ebook_access === "public" && (
           <Button>
-            <a
-              href={`https://archive.org/download/${doc.ia?.[0]}/${doc.ia?.[0]}.pdf`}
-              target="_blank"
+            <Link
+              to={{ pathname: "/viewer", search }}
               rel="noopener noreferrer"
               className="inline-block text-sm font-medium text-green hover:underline">
               Read Pdf
-            </a>
+            </Link>
           </Button>
         )}
       </div>

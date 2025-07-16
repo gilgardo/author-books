@@ -4,6 +4,7 @@ import {
   searchEdition,
   searchDocs,
   searchWork,
+  getEpub,
 } from "../controllers/bookControllers";
 import type { OpenLibrarySearchDoc } from "@/types/openLibrary";
 
@@ -24,3 +25,4 @@ router.get("/doc/:key", searchDoc, async (_, res): Promise<void> => {
 
   res.json(doc);
 });
+router.get("/epub/:ocaid", getEpub);

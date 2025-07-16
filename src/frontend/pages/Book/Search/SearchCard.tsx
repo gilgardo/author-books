@@ -50,7 +50,7 @@ const BookSearchCard = ({
       <CardContent className="flex justify-center items-center px-4">
         <img
           className="w-auto h-[10rem] sm:h-[12rem] md:h-[14rem] object-cover rounded-md"
-          src={coverUrlFactory(doc.cover_i).M}
+          src={coverUrlFactory(doc.cover_i, doc.ia?.[0]).M}
           alt={doc.title}
         />
       </CardContent>
