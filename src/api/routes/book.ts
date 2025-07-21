@@ -25,4 +25,4 @@ router.get("/doc/:key", searchDoc, async (_, res): Promise<void> => {
 
   res.json(doc);
 });
-router.get("/epub/:ocaid", getEpub);
+router.get("/epub/:file", getEpub);

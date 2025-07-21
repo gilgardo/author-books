@@ -38,9 +38,7 @@ export const searchDoc = openlibraryProxyHandler({
   buildQuery: (params: Params) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { key, ...rest } = params;
-    console.log(rest);
     const url = new URLSearchParams(rest);
-    console.log(`${DOCS_URL}?${url}`);
     return `${DOCS_URL}?${url}`;
   },
   isNext: true,
@@ -53,14 +51,12 @@ export const searchEdition = openlibraryProxyHandler({
 });
 
 export const getEpub = async (req: Request, res: Response): Promise<void> => {
-  const { ocaid } = req.params;
-  console.log(ocaid);
-
-  if (!ocaid) {
-    res.status(400).json({ error: "Missing ocaid parameter" });
+  const { file } = req.params;
+  if (!file) {
+    res.status(400).json({ error: "Missing file" });
     return;
   }
-
+  const ocaid = file.replace(".epub", "");
   const url = `${DOWLOAD_URL}/${ocaid}/${ocaid}.epub`;
 
   try {
@@ -73,6 +69,8 @@ export const getEpub = async (req: Request, res: Response): Promise<void> => {
     });
 
     res.setHeader("Content-Type", "application/epub+zip");
+    res.setHeader("Accept-Ranges", "bytes");
+    res.setHeader("Content-Disposition", `inline; filename="${ocaid}.epub"`);
     res.setHeader("Access-Control-Allow-Origin", "*");
 
     response.data.pipe(res);

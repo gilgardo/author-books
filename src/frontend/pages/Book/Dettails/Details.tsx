@@ -113,7 +113,7 @@ const BookDetails = () => {
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block text-sm font-medium text-green hover:underline">
-          View on Open Library →
+          View on Open Library
         </a>
         {doc.ebook_access === "public" && (
           <Button>
