@@ -1,9 +1,12 @@
+import axios from "axios";
+import type { Request, Response } from "express";
 import { maxResults } from "@/data/maxResults";
 import { openlibraryProxyHandler, type Params } from "../utils/proxieHandler";
 
 const WORK_URL = "https://openlibrary.org/works";
 const DOCS_URL = "https://openlibrary.org/search.json";
-const EDICTION_URL = "https://openlibrary.org/books";
+const EDITION_URL = "https://openlibrary.org/books";
+const DOWLOAD_URL = "https://archive.org/download";
 
 export const searchWork = openlibraryProxyHandler({
   errorMessage: "Failed to fetch work",
@@ -41,8 +44,38 @@ export const searchDoc = openlibraryProxyHandler({
   isNext: true,
 });
 
-export const searchEdiction = openlibraryProxyHandler({
+export const searchEdition = openlibraryProxyHandler({
   errorMessage: "Failed to fetch ediction",
   paramsMap: [{ key: "key", isRequired: true }],
-  buildQuery: (params: Params) => `${EDICTION_URL}/${params.key}.json`,
+  buildQuery: (params: Params) => `${EDITION_URL}/${params.key}.json`,
 });
+
+export const getEpub = async (req: Request, res: Response): Promise<void> => {
+  const { file } = req.params;
+  if (!file) {
+    res.status(400).json({ error: "Missing file" });
+    return;
+  }
+  const ocaid = file.replace(".epub", "");
+  const url = `${DOWLOAD_URL}/${ocaid}/${ocaid}.epub`;
+
+  try {
+    const response = await axios.get(url, {
+      responseType: "stream",
+      headers: {
+        "User-Agent": "Author-books/1.0 (alessandro.foresta.dev@gmail.com)",
+        Accept: "application/epub+zip",
+      },
+    });
+
+    res.setHeader("Content-Type", "application/epub+zip");
+    res.setHeader("Accept-Ranges", "bytes");
+    res.setHeader("Content-Disposition", `inline; filename="${ocaid}.epub"`);
+    res.setHeader("Access-Control-Allow-Origin", "*");
+
+    response.data.pipe(res);
+  } catch (err) {
+    console.error("EPUB download failed:", err.message);
+    res.status(500).json({ error: "Failed to fetch EPUB" });
+  }
+};

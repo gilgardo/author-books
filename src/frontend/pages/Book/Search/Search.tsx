@@ -6,6 +6,10 @@ import CardLoader from "./CardLoader";
 import SearchCard from "./SearchCard";
 import { useDocsSearch } from "./useDocsSearch";
 import PageNavigation from "@/frontend/components/PageNavigation";
+import { useQueryClient } from "@tanstack/react-query";
+import books from "../bookKeys";
+import { getWorkQueryOptions } from "../Dettails/useWorkSearch";
+import { getEditionQueryOptions } from "../Dettails/useEditionSearch";
 
 const BooksSearch = () => {
   const [searchParams] = useSearchParams();
@@ -14,9 +18,24 @@ const BooksSearch = () => {
   const navigateToBookDetails = useNavigateToParams("/book");
   const { data, isPending, isPlaceholderData } = useDocsSearch(query, page);
   const maxPage = Math.min(Math.floor((data?.numFound ?? 0) / maxResults), 100);
+  const queryClient = useQueryClient();
 
-  const handleClick = (key: string) =>
-    navigateToBookDetails({ q: query, page: page.toString(), key });
+  const handleClick = (workKey: string, editionKey: string) =>
+    navigateToBookDetails({
+      q: query,
+      page: page.toString(),
+      workKey,
+      editionKey,
+    });
+
+  const handlePrefetch = (workKey: string, editionKey: string) => {
+    const doc = data?.docs.find((doc) => doc.key.includes(workKey));
+    if (!doc) return;
+    queryClient.setQueryData(books.doc(query, page, workKey).queryKey, doc);
+    queryClient.prefetchQuery(getWorkQueryOptions(workKey));
+    if (editionKey !== "")
+      queryClient.prefetchQuery(getEditionQueryOptions(editionKey));
+  };
 
   return (
     <>
@@ -35,6 +54,7 @@ const BooksSearch = () => {
                 key={doc.key}
                 doc={doc}
                 handleClick={handleClick}
+                handlePrefetch={handlePrefetch}
                 isPlaceholderData={isPlaceholderData}
               />
             ))}

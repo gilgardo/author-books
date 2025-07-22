@@ -1,16 +1,17 @@
 import { Router } from "express";
 import {
   searchDoc,
-  searchEdiction,
+  searchEdition,
   searchDocs,
   searchWork,
+  getEpub,
 } from "../controllers/bookControllers";
 import type { OpenLibrarySearchDoc } from "@/types/openLibrary";
 
 export const router = Router();
 
 router.get("/work/:key", searchWork);
-router.get("/ediction/:key", searchEdiction);
+router.get("/edition/:key", searchEdition);
 router.get("/docs", searchDocs);
 router.get("/doc/:key", searchDoc, async (_, res): Promise<void> => {
   const { proxyData, params } = res.locals;
@@ -18,9 +19,10 @@ router.get("/doc/:key", searchDoc, async (_, res): Promise<void> => {
     doc?.key?.includes(params.key)
   );
   if (!doc) {
-    res.status(500).json({ error: "Doc not found" });
+    res.status(404).json({ error: "Doc not found" });
     return;
   }
 
   res.json(doc);
 });
+router.get("/epub/:file", getEpub);

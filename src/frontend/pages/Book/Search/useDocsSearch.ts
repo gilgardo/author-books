@@ -4,7 +4,7 @@ import books from "../bookKeys";
 
 export function getDocsSearchQueryOptions(q: string, page: number) {
   return queryOptions({
-    ...books.docs(q, page + 1),
+    ...books.docs(q, page),
     enabled: !!q,
   });
 }
