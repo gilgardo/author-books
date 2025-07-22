@@ -14,4 +14,53 @@ model User {
   email    String @unique
   userName String
   password String
+  libraries Library[]
 }
+
+model Library {
+  id      Int    @id @default(autoincrement())
+  name    String
+  userId  Int
+  user    User   @relation(fields: [userId], references: [id])
+  books   Book[] 
+  @@unique([userId, name])
+}
+
+model Book {
+  key         Int     @id 
+  title      String
+  libraryId  Int
+  cover_ediction_key String?
+  author_name String[]
+  ebook_acces EbookAccess?
+  public_scan_b Boolean
+  ia String[]
+  cover_i Int?
+  library    Library @relation(fields: [libraryId], references: [id])
+}
+
+
+enum EbookAccess {
+  borrowable
+  public
+}
+
+
+// export interface OpenLibrarySearchDoc {
+//   author_key: string[];
+//   author_name: string[];
+//   cover_edition_key?: string;
+//   cover_i?: number;
+//   ebook_access?: "borrowable" | "public";
+//   edition_count: number;
+//   first_publish_year?: number;
+//   has_fulltext: boolean;
+//   ia?: string[];
+//   ia_collection_s?: string;
+//   key: string;
+//   language?: string[];
+//   lending_edition_s?: string;
+//   lending_identifier_s?: string;
+//   public_scan_b: boolean;
+//   title: string;
+// }
