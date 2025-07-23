@@ -1,4 +1,3 @@
-import { defaultFn } from "@/frontend/main";
 import type {
   OpenLibraryEdition,
   OpenLibrarySearchDoc,
@@ -7,6 +6,7 @@ import type {
 } from "@/types/openLibrary";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
 import { fetchEpub } from "./Viewer/fetchEpub";
+import defaultFn from "@/utils/defaultFn";
 
 const books = createQueryKeys("book", {
   all: null,

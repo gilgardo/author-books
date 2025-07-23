@@ -6,4 +6,6 @@ up:
 down:
 	docker compose down
 prisma-init:
-	docker exec -it author-books-backend-1 "npx prisma db push"
+	docker exec -it author-books-backend-1 npx prisma db push
+rebuild:
+	docker compose up -d --build

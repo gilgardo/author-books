@@ -20,6 +20,7 @@ router.get("/", optionalAuth, (req: JWTRequest, res: Response) => {
 });
 router.use(requireAuth);
 router.get("/libraries", async (req: JWTRequest, res: Response) => {
+  console.log("logged");
   const { id: userId } = req.auth!;
   const libraries = await prisma.library.findMany({
     where: { userId: Number(userId) },
@@ -27,7 +28,7 @@ router.get("/libraries", async (req: JWTRequest, res: Response) => {
   res.json(libraries);
 });
 
-router.get("/libraries/:id", async (req: JWTRequest, res: Response) => {
+router.get("/libraries/id/:id", async (req: JWTRequest, res: Response) => {
   const id = Number(req.params.id);
 
   if (!id) {
@@ -81,7 +82,7 @@ router.post("/libraries", async (req: JWTRequest, res: Response) => {
   res.status(201).json(library);
 });
 
-router.post("/libraries/:id", async (req: JWTRequest, res: Response) => {
+router.post("/libraries/id/:id", async (req: JWTRequest, res: Response) => {
   const { id: userId } = req.auth!;
   const libraryId = Number(req.params.id);
   const { book }: { book: Prisma.BookCreateInput } = req.body;
