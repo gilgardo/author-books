@@ -24,31 +24,11 @@ router.get("/libraries", async (req: JWTRequest, res: Response) => {
   const { id: userId } = req.auth!;
   const libraries = await prisma.library.findMany({
     where: { userId: Number(userId) },
+    include: {
+      books: true,
+    },
   });
   res.json(libraries);
-});
-
-router.get("/libraries/id/:id", async (req: JWTRequest, res: Response) => {
-  const id = Number(req.params.id);
-
-  if (!id) {
-    res.status(400).json({ error: "Missing or invalid parameter `libraryId`" });
-    return;
-  }
-
-  try {
-    const library = await prisma.library.findUniqueOrThrow({
-      where: { id },
-      include: {
-        books: true,
-      },
-    });
-
-    res.json(library);
-  } catch (error) {
-    console.log(error);
-    res.status(404).json({ error: "Library not found" });
-  }
 });
 
 router.post("/libraries", async (req: JWTRequest, res: Response) => {
