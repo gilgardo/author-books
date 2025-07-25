@@ -5,7 +5,8 @@ import { router as userRouter } from "./routes/user.ts";
 import type { Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-
+import cookieParser from "cookie-parser";
+import csrf from "csurf";
 dotenv.config();
 const app = express();
 app.use(
@@ -21,6 +22,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api/book", bookRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+const csrfProtection = csrf({
+  cookie: true,
+});
+app.use(cookieParser());
+app.use(csrfProtection);
 app.get("/csrf-token", (req, res) => {
   console.log(req.csrfToken());
   res.json({ csrfToken: req.csrfToken() });

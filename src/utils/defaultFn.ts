@@ -15,6 +15,7 @@ const defaultFn = async <T = unknown>(ctx: QueryFunctionContext) => {
   const url = pathSegments.join("/");
   try {
     const { data } = await api.get(url, { params, signal });
+    console.log(data);
     return data as T;
   } catch (error) {
     const err = error as AxiosError<{ message?: string }>;
@@ -22,4 +23,4 @@ const defaultFn = async <T = unknown>(ctx: QueryFunctionContext) => {
   }
 };
 
-export default defaultFn
+export default defaultFn;

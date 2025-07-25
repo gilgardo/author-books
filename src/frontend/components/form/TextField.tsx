@@ -1,6 +1,7 @@
 import { Label } from "@/components/ui/label";
-import { useFieldContext } from "./useSignForm";
+
 import { Input } from "@/components/ui/input";
+import { useFieldContext } from "./useAppForm";
 
 type FormInputType =
   | "text"
@@ -25,7 +26,7 @@ type FormInputType =
   | "reset"
   | "button";
 
-export function TextField({
+export const TextField = ({
   id,
   type,
   label,
@@ -35,7 +36,7 @@ export function TextField({
   type?: FormInputType;
   label: string;
   placeholder?: string;
-}) {
+}) => {
   const field = useFieldContext<string>();
   return (
     <div className="grid gap-2 mb-4">
@@ -54,4 +55,5 @@ export function TextField({
       )}
     </div>
   );
-}
+};
+export default TextField;

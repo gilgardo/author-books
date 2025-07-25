@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import useSignForm from "./signForm/useSignForm";
+import useSignForm from "./useSignForm";
 import useSign from "./useSign";
 import { useAuth } from "../../auth/useAuth";
 import { Link, Navigate } from "react-router-dom";
@@ -86,7 +86,7 @@ const SignUp = () => {
             )}
           />
           <form.AppForm>
-            <form.Error />
+            <form.FooterError />
           </form.AppForm>
         </form>
       </CardContent>

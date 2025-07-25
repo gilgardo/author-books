@@ -7,11 +7,13 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
-  const isModifying = ["POST", "PUT", "PATCH", "DELETE"].includes(
+  console.log("[Interceptor] Running for", config.method, config.url);
+  const isModifying = ["post", "put", "patch", "delete"].includes(
     config.method || ""
   );
 
   if (isModifying) {
+    console.log("Fetching CSRF token...");
     try {
       const { data } = await axios.get(`${BASE_URL}/csrf-token`, {
         withCredentials: true,

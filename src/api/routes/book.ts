@@ -19,7 +19,7 @@ router.get("/doc/:key", searchDoc, async (_, res): Promise<void> => {
     doc?.key?.includes(params.key)
   );
   if (!doc) {
-    res.status(404).json({ error: "Doc not found" });
+    res.status(404).json({ message: "Doc not found" });
     return;
   }
 

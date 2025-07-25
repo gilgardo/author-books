@@ -15,12 +15,20 @@ const csrfProtection = csrf({
 });
 router.use(cookieParser());
 router.use(csrfProtection);
-router.get("/", optionalAuth, (req: JWTRequest, res: Response) => {
-  res.json({ user: req.auth ?? null });
+router.get("/logged", optionalAuth, (req: JWTRequest, res: Response) => {
+  res.json(req.auth ? req.auth : null);
 });
 router.use(requireAuth);
+router.post("/logout", (_, res: Response) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  });
+  res.status(200).json({ message: "Logged out successfully" });
+});
+
 router.get("/libraries", async (req: JWTRequest, res: Response) => {
-  console.log("logged");
   const { id: userId } = req.auth!;
   const libraries = await prisma.library.findMany({
     where: { userId: Number(userId) },
@@ -37,7 +45,7 @@ router.post("/libraries", async (req: JWTRequest, res: Response) => {
   if (!name || typeof name !== "string") {
     res
       .status(400)
-      .json({ error: "Missing or invalid parameter library name" });
+      .json({ message: "Missing or invalid parameter library name" });
     return;
   }
   const existing = await prisma.library.findUnique({
@@ -68,7 +76,7 @@ router.post("/libraries/id/:id", async (req: JWTRequest, res: Response) => {
   const { book }: { book: Prisma.BookCreateInput } = req.body;
 
   if (!book) {
-    res.status(400).json({ error: "Missing or invalid body" });
+    res.status(400).json({ message: "Missing or invalid body" });
     return;
   }
 

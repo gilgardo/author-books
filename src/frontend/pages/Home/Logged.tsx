@@ -2,8 +2,10 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus } from "lucide-react";
 import { useLibrariesSearch } from "./librariesHook";
 import type { User } from "@/frontend/auth/authContext";
+import LibraryDialog from "./LibraryDialog";
 
 const Logged = ({ user }: { user: User }) => {
+  console.log("logged");
   const { data: libraries, isLoading } = useLibrariesSearch();
 
   if (isLoading) return <div>Loading libraries...</div>;
@@ -30,13 +32,13 @@ const Logged = ({ user }: { user: User }) => {
           </Card>
         ))}
 
-        <Card
-          onClick={() => {
-            // trigger modal or form
-          }}
-          className="rounded-full border-dashed border-2 border-primary/70 hover:bg-secondary/50 transition cursor-pointer flex items-center justify-center w-20 h-20">
-          <Plus className="w-6 h-6 text-primary" />
-        </Card>
+        <LibraryDialog
+          trigger={
+            <Card className="rounded-full border-dashed border-2 border-primary/70 hover:bg-secondary/50 transition cursor-pointer flex items-center justify-center w-20 h-20">
+              <Plus className="w-6 h-6 text-primary" />
+            </Card>
+          }
+        />
       </div>
     </div>
   );

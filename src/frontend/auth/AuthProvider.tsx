@@ -1,8 +1,8 @@
-import { useGetUser } from "./useGetUser";
+import { useLoggin } from "./useLogg";
 import { AuthContext } from "./authContext";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { data: user, isPending } = useGetUser();
+  const { data: user, isPending } = useLoggin();
 
   const authValue = user
     ? { user, isAuth: true, isPending }

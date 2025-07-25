@@ -1,8 +1,8 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useFormContext } from "./useSignForm";
 import { AlertCircleIcon } from "lucide-react";
+import { useFormContext } from "./useAppForm";
 
-const Error = () => {
+const FooterError = () => {
   const form = useFormContext();
   return (
     <form.Subscribe
@@ -20,4 +20,4 @@ const Error = () => {
   );
 };
 
-export default Error;
+export default FooterError;
