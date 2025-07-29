@@ -5,6 +5,7 @@ export function getEpubQueryOptions(ocaid: string) {
   return {
     ...queryOptions({
       ...books.epub(ocaid),
+      enabled: !!ocaid,
     }),
   };
 }

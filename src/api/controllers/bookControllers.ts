@@ -36,7 +36,6 @@ export const searchDoc = openlibraryProxyHandler({
     { key: "limit", isRequired: false, defaultValue: maxResults.toString() },
   ],
   buildQuery: (params: Params) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { key, ...rest } = params;
     const url = new URLSearchParams(rest);
     return `${DOCS_URL}?${url}`;
@@ -68,14 +67,14 @@ export const getEpub = async (req: Request, res: Response): Promise<void> => {
       },
     });
 
-    res.setHeader("Content-Type", "application/epub+zip");
-    res.setHeader("Accept-Ranges", "bytes");
-    res.setHeader("Content-Disposition", `inline; filename="${ocaid}.epub"`);
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.status(response.status);
+    Object.entries(response.headers).forEach(([key, value]) => {
+      if (value) res.setHeader(key, value);
+    });
 
     response.data.pipe(res);
   } catch (err) {
-    console.error("EPUB download failed:", err.message);
+    console.error("EPUB download failed:", (err as Error).message);
     res.status(500).json({ error: "Failed to fetch EPUB" });
   }
 };

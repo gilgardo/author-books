@@ -7,7 +7,7 @@ import SignUp from "./pages/Sign/SignUp";
 import SignIn from "./pages/Sign/SignIn";
 import Search from "./pages/Book/Search/Search";
 import Details from "./pages/Book/Dettails/Details";
-import Viewer from "./pages/Book/Viewer/Viewer";
+import ReadingPage from "./pages/Book/Reader/Reader";
 
 const router = createBrowserRouter([
   {
@@ -16,7 +16,7 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "books/search", element: <Search /> },
       { path: "book", element: <Details /> },
-      { path: "viewer", element: <Viewer /> },
+      { path: "viewer", element: <ReadingPage /> },
       { path: "info", element: <Info /> },
       { path: "signIn", element: <SignIn /> },
       { path: "signUp", element: <SignUp /> },

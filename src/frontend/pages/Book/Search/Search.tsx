@@ -40,7 +40,7 @@ const BooksSearch = () => {
 
   return (
     <>
-      <h2 className="text-dark text-xl md:text-2xl">
+      <h2 className="text-dark text-xl md:text-2xl mb-3">
         Search results for{" "}
         <span className="font-bold text-primary">{query}</span>:
       </h2>

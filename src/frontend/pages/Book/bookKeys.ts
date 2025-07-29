@@ -5,7 +5,7 @@ import type {
   OpenLibrarySearchResponse,
 } from "@/types/openLibrary";
 import { createQueryKeys } from "@lukemorales/query-key-factory";
-import { fetchEpub } from "./Viewer/fetchEpub";
+import { fetchEpub } from "./Reader/fetchEpub";
 import defaultFn from "@/utils/defaultFn";
 
 const books = createQueryKeys("book", {
