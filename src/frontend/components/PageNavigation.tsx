@@ -31,9 +31,11 @@ const PageNavigation = ({
   return (
     <Pagination>
       <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious to={linkForPage(Math.max(1, page - 1))} />
-        </PaginationItem>
+        {page !== 1 && (
+          <PaginationItem>
+            <PaginationPrevious to={linkForPage(Math.max(1, page - 1))} />
+          </PaginationItem>
+        )}
 
         {slots.map((slot, i) =>
           slot.isEllipsis ? (
@@ -48,9 +50,11 @@ const PageNavigation = ({
           )
         )}
 
-        <PaginationItem>
-          <PaginationNext to={linkForPage(Math.min(maxPage, page + 1))} />
-        </PaginationItem>
+        {page !== maxPage && (
+          <PaginationItem>
+            <PaginationNext to={linkForPage(Math.min(maxPage, page + 1))} />
+          </PaginationItem>
+        )}
       </PaginationContent>
     </Pagination>
   );

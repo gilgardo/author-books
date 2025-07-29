@@ -1,6 +1,6 @@
 const Info = () => {
   return (
-    <div className="flex flex-col items-start justify-start">
+    <div className="flex flex-col items-start h-full">
       <h1 className="text-2xl font-bold text-primary mb-6">
         📚 About This Project
       </h1>
