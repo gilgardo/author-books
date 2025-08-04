@@ -3,6 +3,9 @@ import api from "@/utils/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import toast from "react-hot-toast";
+import userkey from "../Home/userKey";
+import { getPath } from "@/utils/getPath";
+import authkeys from "@/frontend/auth/authKeys";
 
 const sign = async ({
   userData,
@@ -11,7 +14,8 @@ const sign = async ({
   userData: SignInUser | SignUpUser;
   path: "signUp" | "signIn";
 }) => {
-  const res = await api.post(`/auth/${path}`, userData);
+  const url = getPath(authkeys[path].queryKey);
+  const res = await api.post(url, userData);
   return res.data as AuthedUser;
 };
 const useSign = (path: "signUp" | "signIn") => {
@@ -19,7 +23,7 @@ const useSign = (path: "signUp" | "signIn") => {
   return useMutation({
     mutationFn: (userData: SignInUser | SignUpUser) => sign({ userData, path }),
     onSuccess: (user) => {
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: userkey._def });
       toast.success(`welcome ${user.userName}`);
     },
     onError: (error) => {

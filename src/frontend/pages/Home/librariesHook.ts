@@ -9,7 +9,7 @@ import userkey from "./userKey";
 import api from "@/utils/api";
 import toast from "react-hot-toast";
 import type { Library } from "@prisma/client";
-import type { AxiosResponse } from "axios";
+import type { AxiosError, AxiosResponse } from "axios";
 
 export function getLibrariesQueryOptions() {
   return queryOptions({
@@ -46,8 +46,10 @@ export const useMutateLibrary = () => {
       return { prevLibraries, optimisticId };
     },
 
-    onError: (err, _, context) => {
-      toast.error(err.message);
+    onError: (error, _, context) => {
+      const err = error as AxiosError<{ message?: string; type?: string }>;
+      const message = err.response?.data?.message ?? err.message;
+      toast.error(message);
       queryClient.setQueryData(
         getLibrariesQueryOptions().queryKey,
         context?.prevLibraries

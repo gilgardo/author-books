@@ -1,8 +1,9 @@
-import { Router, type RequestHandler } from "express";
+import { Router } from "express";
 import { signUp } from "./signUpController";
-import { expressjwt } from "express-jwt";
+import { expressjwt, type Request as JWTRequest } from "express-jwt";
+import csrf from "csurf";
 import { signIn } from "./signInController";
-import type { Request } from "express";
+import type { Request, Response } from "express";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -31,5 +32,29 @@ export const requireAuth = expressjwt({
   credentialsRequired: true,
 });
 
-router.post("/signUp", signUp as RequestHandler);
-router.post("/signIn", signIn as RequestHandler);
+router.post("/signUp", signUp);
+router.post("/signIn", signIn);
+
+router.get("/me", optionalAuth, (req: JWTRequest, res: Response) => {
+  res.json(req.auth ? req.auth : null);
+});
+
+const csrfProtection = csrf({
+  cookie: true,
+});
+
+router.use(csrfProtection);
+
+router.get("/csrf_token", csrfProtection, (req, res) => {
+  console.log(req.csrfToken());
+  res.json({ csrfToken: req.csrfToken() });
+});
+
+router.post("/logout", requireAuth, (_, res: Response) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  });
+  res.status(200).json({ message: "Logged out successfully" });
+});

@@ -25,10 +25,7 @@ app.use("/api/auth", authRouter);
 const csrfProtection = csrf({
   cookie: true,
 });
-app.get("/api/csrf-token", csrfProtection, (req, res) => {
-  console.log(req.csrfToken());
-  res.json({ csrfToken: req.csrfToken() });
-});
+
 app.use("/api/user", csrfProtection, userRouter);
 app.use((err: Error, _: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);

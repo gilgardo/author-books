@@ -14,7 +14,10 @@ import { useMutateLibrary } from "./librariesHook";
 
 export const LibraryDialog = ({ trigger }: { trigger: React.ReactNode }) => {
   const { mutate } = useMutateLibrary();
-  const form = useAddLibForm({ name: "" }, mutate);
+  const form = useAddLibForm({ name: "" }, (value) => {
+    mutate(value);
+    form.reset();
+  });
   return (
     <Dialog>
       <form
@@ -22,9 +25,7 @@ export const LibraryDialog = ({ trigger }: { trigger: React.ReactNode }) => {
           e.preventDefault();
           e.stopPropagation();
         }}>
-        <DialogTrigger asChild>
-          <Button variant="outline">{trigger}</Button>
-        </DialogTrigger>
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Add Library</DialogTitle>
