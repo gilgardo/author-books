@@ -9,5 +9,5 @@ export const fetchEpub = async (ocaid: string) => {
 
   const blob: Blob = res.data;
 
-  return URL.createObjectURL(blob);
+  return blob;
 };

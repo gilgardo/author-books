@@ -26,7 +26,7 @@ type Settings = {
 const ReadingPage = () => {
   const [searchParams] = useSearchParams();
   const ocaid = searchParams.get("ocaid") || "";
-  const title = searchParams.get("ocaid") || "Book";
+  const title = searchParams.get("title") || "Book";
   const [settings, setSettings] = useState<Settings>({
     highlights: [],
     lastLocation: "",
@@ -88,6 +88,7 @@ const ReadingPage = () => {
 
   //   fetchBookUrl();
   // }, [slug]);
+  const memoizedEmptyFn = useCallback(() => {}, []);
 
   return (
     <div>
@@ -96,9 +97,9 @@ const ReadingPage = () => {
         title={title}
         highlights={settings.highlights}
         lastLocation={settings.lastLocation}
-        onHighlight={() => {}}
-        onHighlightClear={() => {}}
-        onLocationChanged={() => {}}
+        onHighlight={memoizedEmptyFn}
+        onHighlightClear={memoizedEmptyFn}
+        onLocationChanged={memoizedEmptyFn}
       />
     </div>
   );

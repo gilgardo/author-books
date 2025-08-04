@@ -1,5 +1,5 @@
 import { type FC, useEffect, useState } from "react";
-import { Book, Rendition } from "epubjs";
+import Epub, { Book, Rendition } from "epubjs";
 import Navigator from "./Navigator";
 import LoadingIndicator from "./LoadingIndicator";
 import TableOfContent, { type BookNavList } from "./TableOfContent";
@@ -170,8 +170,8 @@ const EpubReader: FC<Props> = ({
     end: 0,
     total: 0,
   });
-
-  const { data: buf, isPending } = useEpubGet(ocaid);
+  console.log(ocaid, title);
+  const { data: blob, isPending } = useEpubGet(ocaid);
 
   const updatePageCounts = (rendition: Rendition) => {
     const location = rendition.currentLocation() as unknown as RelocatedEvent;
@@ -251,72 +251,107 @@ const EpubReader: FC<Props> = ({
   }, [rendition, highlights, settings.fontSize]);
 
   useEffect(() => {
-    if (!buf) return;
+    if (!blob) return;
+    let book: Book | undefined;
+    console.log("Blob type:", blob.type, "Size:", blob.size);
 
-    const book = new Book(buf, { replacements: "blobUrl" });
-    const { height, width } = getElementSize(wrapper);
-    const rendition = book.renderTo(container, {
-      width,
-      height,
-    });
+    const reader = new FileReader();
 
-    if (lastLocation) rendition.display(lastLocation);
-    else rendition.display();
+    reader.onload = async () => {
+      if (!reader.result) return;
 
-    // Registering The Theme Options
-    rendition.themes.register("light", LIGHT_THEME);
-    rendition.themes.register("dark", DARK_THEME);
+      book = new Book();
+      await book.open(reader.result as ArrayBuffer, "binary");
 
-    const debounceSetShowHighlightOption = debounce(
-      setShowHighlightOptions,
-      3000
-    );
-    const debounceUpdateLoading = debounce(setLoading, 500);
+      // Wait until the book is fully ready
+      await book.ready;
 
-    // Let's listen if resized is finished
-    rendition.on("resized", () => {
-      debounceUpdateLoading(false);
-    });
+      try {
+        const rendition = await createRenditionAndDisplay(book);
+        setRenditionListener(rendition);
 
-    // Let's fire the on click if we click inside the book
-    rendition.on("click", () => {
-      hideToc();
-    });
+        // Generate locations after display
+        await book.locations.generate(1500);
 
-    // Let's listen to the text selection
-    rendition.on("selected", (cfi: string) => {
-      setShowHighlightOptions(true);
-      setSelectedCfi(cfi);
-      debounceSetShowHighlightOption(false);
-    });
+        loadBook(book);
+        setRendition(rendition);
+      } catch (err) {
+        console.error("Error displaying the book:", err);
+      }
+    };
 
-    // Let's listen to the highlight click
-    rendition.on("markClicked", (cfi: string) => {
-      setShowHighlightOptions(true);
-      setSelectedCfi(cfi);
-      debounceSetShowHighlightOption(false);
-    });
+    reader.readAsArrayBuffer(blob);
 
-    rendition.on("displayed", () => {
-      updatePageCounts(rendition);
-    });
-    rendition.on("locationChanged", (evt: LocationChangedEvent) => {
-      onLocationChanged(evt.start);
-      updatePageCounts(rendition);
-    });
+    const createRenditionAndDisplay = async (book: Book) => {
+      const { height, width } = getElementSize(wrapper);
+      console.log(book, book.path);
+      const rendition = book.renderTo(container, {
+        width,
+        height,
+      });
+      console.log(rendition);
 
-    loadTableOfContent(book)
-      .then(setTableOfContent)
-      .finally(() => {
-        setLoading(false);
+      if (lastLocation && lastLocation !== "")
+        await rendition.display(lastLocation);
+      else await rendition.display().catch((err) => console.log(err));
+
+      // Registering The Theme Options
+      rendition.themes.register("light", LIGHT_THEME);
+      rendition.themes.register("dark", DARK_THEME);
+
+      return rendition;
+    };
+
+    const setRenditionListener = (rendition: Rendition) => {
+      const debounceSetShowHighlightOption = debounce(
+        setShowHighlightOptions,
+        3000
+      );
+      const debounceUpdateLoading = debounce(setLoading, 500);
+
+      rendition.on("resized", () => {
+        debounceUpdateLoading(false);
       });
 
-    setRendition(rendition);
+      // Let's fire the on click if we click inside the book
+      rendition.on("click", () => {
+        hideToc();
+      });
+
+      // Let's listen to the text selection
+      rendition.on("selected", (cfi: string) => {
+        setShowHighlightOptions(true);
+        setSelectedCfi(cfi);
+        debounceSetShowHighlightOption(false);
+      });
+
+      // Let's listen to the highlight click
+      rendition.on("markClicked", (cfi: string) => {
+        setShowHighlightOptions(true);
+        setSelectedCfi(cfi);
+        debounceSetShowHighlightOption(false);
+      });
+
+      rendition.on("displayed", () => {
+        updatePageCounts(rendition);
+      });
+      rendition.on("locationChanged", (evt: LocationChangedEvent) => {
+        onLocationChanged(evt.start);
+        updatePageCounts(rendition);
+      });
+    };
+
+    const loadBook = async (book: Book) => {
+      const navBookList = await loadTableOfContent(book);
+
+      setTableOfContent(navBookList);
+      setLoading(false);
+    };
 
     return () => {
       if (book) book.destroy();
     };
-  }, [buf, lastLocation, onLocationChanged]);
+  }, [blob, lastLocation, onLocationChanged]);
 
   // to handle window resize or resize the book container
   useEffect(() => {
