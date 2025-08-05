@@ -12,10 +12,20 @@ const Logged = ({ user }: { user: User }) => {
 
   return (
     <div className="rounded-2xl shadow-md p-4 bg-accent/60 border border-primary mx-auto mb-auto w-full">
-      <h2 className="text-dark text-xl md:text-2xl mb-4">
-        Your Libraries{" "}
-        <span className="font-bold text-primary">{user.userName}</span>:
-      </h2>
+      <header className="flex items-center justify-between mb-4">
+        <h2 className="text-dark text-xl md:text-2xl">
+          Your Libraries{" "}
+          <span className="font-bold text-primary">{user.userName}</span>:
+        </h2>
+
+        <LibraryDialog
+          trigger={
+            <div className="rounded-full bg-primary hover:bg-secondary/50 hover:border-2 border-primary text-accent hover:text-primary transition cursor-pointer flex items-center justify-center w-10 h-10">
+              <Plus className="w-5 h-5 " />
+            </div>
+          }
+        />
+      </header>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 auto-rows-fr items-center">
         {libraries?.map((lib) => (
@@ -31,14 +41,6 @@ const Logged = ({ user }: { user: User }) => {
             </CardHeader>
           </Card>
         ))}
-
-        <LibraryDialog
-          trigger={
-            <Card className="rounded-full border-dashed border-2 border-primary/70 hover:bg-secondary/50 transition cursor-pointer flex items-center justify-center w-20 h-20">
-              <Plus className="w-6 h-6 text-primary" />
-            </Card>
-          }
-        />
       </div>
     </div>
   );
