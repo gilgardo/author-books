@@ -5,15 +5,22 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 // import { v4 as uuidv4 } from "uuid";
-import userkey from "./userKey";
+import userkey, { type LibraryWithBooks } from "./userKey";
 import api from "@/utils/api";
 import toast from "react-hot-toast";
-import type { Library } from "@prisma/client";
 import type { AxiosError, AxiosResponse } from "axios";
+import { getPath } from "@/utils/getPath";
 
 export function getLibrariesQueryOptions() {
   return queryOptions({
     ...userkey.libraries,
+  });
+}
+
+export function getLibraryQueryOptions(id: string | undefined) {
+  return queryOptions({
+    ...userkey.libraries._ctx.id(id ? id : ""),
+    enabled: !!id,
   });
 }
 
@@ -23,14 +30,27 @@ export const useLibrariesSearch = () => {
   });
 };
 
+export const useLibrarySearch = (id: string | undefined) => {
+  const queryClient = useQueryClient();
+  return useQuery({
+    ...getLibraryQueryOptions(id),
+    placeholderData: () => {
+      if (!id) return undefined;
+      return queryClient
+        .getQueryData(getLibrariesQueryOptions().queryKey)
+        ?.find((lib) => lib.id.toString() === id)?.books;
+    },
+  });
+};
+
 export const useMutateLibrary = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ name }: { name: string }) =>
       api
-        .post("/user/libraries", { name })
-        .then((res: AxiosResponse<Library>) => res.data),
+        .post(getPath(userkey.libraries.queryKey), { name })
+        .then((res: AxiosResponse<LibraryWithBooks>) => res.data),
 
     onMutate: async ({ name, userId }: { name: string; userId: number }) => {
       const libQueryKey = getLibrariesQueryOptions().queryKey;
@@ -38,7 +58,7 @@ export const useMutateLibrary = () => {
       const prevLibraries = queryClient.getQueryData(libQueryKey);
 
       const optimisticId = -Date.now();
-      const optimisticLib = { name, userId, id: optimisticId };
+      const optimisticLib = { name, userId, id: optimisticId, books: [] };
       queryClient.setQueryData(libQueryKey, (old) =>
         old ? [...old, optimisticLib] : [optimisticLib]
       );

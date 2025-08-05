@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import type { OpenLibrarySearchDoc } from "@/types/openLibrary";
 import coverUrlFactory from "@/utils/coverUrlFactory";
+import type { Book } from "@prisma/client";
 import clsx from "clsx";
 
 const BookSearchCard = ({
@@ -15,7 +16,7 @@ const BookSearchCard = ({
   handlePrefetch,
   isPlaceholderData,
 }: {
-  doc: OpenLibrarySearchDoc;
+  doc: OpenLibrarySearchDoc | Book;
   handleClick: (workKey: string, editionKey: string) => void;
   handlePrefetch: (workKey: string, editionKey: string) => void;
   isPlaceholderData: boolean;
@@ -50,7 +51,7 @@ const BookSearchCard = ({
       <CardContent className="flex justify-center items-center px-4">
         <img
           className="w-auto h-[10rem] sm:h-[12rem] md:h-[14rem] object-cover rounded-md"
-          src={coverUrlFactory(doc.cover_i, doc.ia?.[0]).M}
+          src={coverUrlFactory(doc.cover_i ?? undefined, doc.ia?.[0]).M}
           alt={doc.title}
         />
       </CardContent>

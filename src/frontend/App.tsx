@@ -8,12 +8,17 @@ import SignIn from "./pages/Sign/SignIn";
 import Search from "./pages/Book/Search/Search";
 import Details from "./pages/Book/Dettails/Details";
 import ReadingPage from "./pages/Book/Reader/Reader";
+import Library from "./pages/Home/Library/Library";
 
 const router = createBrowserRouter([
   {
     element: <MainLayout />,
     children: [
-      { path: "/", element: <Home /> },
+      {
+        path: "/",
+        element: <Home />,
+        children: [{ path: "library/:id", element: <Library /> }],
+      },
       { path: "books/search", element: <Search /> },
       { path: "book", element: <Details /> },
       { path: "viewer", element: <ReadingPage /> },

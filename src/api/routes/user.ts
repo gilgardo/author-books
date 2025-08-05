@@ -1,32 +1,13 @@
 import { Router } from "express";
-import { optionalAuth, requireAuth } from "../auth/auth";
-import cookieParser from "cookie-parser";
+import { requireAuth } from "../auth/auth";
 import type { Request as JWTRequest } from "express-jwt";
 import type { Response } from "express";
-
-import csrf from "csurf";
 import prisma from "../prisma";
 import type { Prisma } from "@prisma/client";
 
 export const router = Router();
 
-const csrfProtection = csrf({
-  cookie: true,
-});
-router.use(cookieParser());
-router.use(csrfProtection);
-router.get("/logged", optionalAuth, (req: JWTRequest, res: Response) => {
-  res.json(req.auth ? req.auth : null);
-});
 router.use(requireAuth);
-router.post("/logout", (_, res: Response) => {
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-  });
-  res.status(200).json({ message: "Logged out successfully" });
-});
 
 router.get("/libraries", async (req: JWTRequest, res: Response) => {
   const { id: userId } = req.auth!;
@@ -38,7 +19,22 @@ router.get("/libraries", async (req: JWTRequest, res: Response) => {
   });
   res.json(libraries);
 });
-
+router.get("/libraries/id/:id", async (req: JWTRequest, res: Response) => {
+  const { id: userId } = req.auth!;
+  const libraryId = Number(req.params.id);
+  const libraries = await prisma.library.findMany({
+    where: { userId: Number(userId) },
+    include: {
+      books: true,
+    },
+  });
+  const library = libraries.find((lib) => lib.id === libraryId);
+  if (!library) {
+    res.status(404).json({ message: "Library not found" });
+    return;
+  }
+  res.json(library.books);
+});
 router.post("/libraries", async (req: JWTRequest, res: Response) => {
   const { id: userId } = req.auth!;
   const { name } = req.body;
@@ -66,6 +62,7 @@ router.post("/libraries", async (req: JWTRequest, res: Response) => {
       name,
       userId,
     },
+    include: { books: true },
   });
   res.status(201).json(library);
 });
