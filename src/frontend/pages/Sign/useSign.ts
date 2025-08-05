@@ -3,7 +3,6 @@ import api from "@/utils/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import toast from "react-hot-toast";
-import userkey from "../Home/userKey";
 import { getPath } from "@/utils/getPath";
 import authkeys from "@/frontend/auth/authKeys";
 
@@ -23,7 +22,7 @@ const useSign = (path: "signUp" | "signIn") => {
   return useMutation({
     mutationFn: (userData: SignInUser | SignUpUser) => sign({ userData, path }),
     onSuccess: (user) => {
-      queryClient.invalidateQueries({ queryKey: userkey._def });
+      queryClient.invalidateQueries({ queryKey: authkeys._def });
       toast.success(`welcome ${user.userName}`);
     },
     onError: (error) => {

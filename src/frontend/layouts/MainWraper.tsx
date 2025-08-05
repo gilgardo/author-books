@@ -1,4 +1,4 @@
-import NavBar from "../NavBar";
+import NavBar from "../sections/nav/NavBar";
 
 const MainWraper = ({
   children,

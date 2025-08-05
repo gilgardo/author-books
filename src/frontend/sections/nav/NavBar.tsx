@@ -1,9 +1,10 @@
 import { BookOpenIcon } from "@heroicons/react/24/solid";
-import NavLink from "./components/NavLink";
-import NavSearch from "./components/NavSearch";
+import NavLink from "./NavLink";
+import NavSearch from "./NavSearch";
 import { Link } from "react-router-dom";
-import { useAuth } from "./auth/useAuth";
+import { useAuth } from "../../auth/useAuth";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import ProfilePopover from "./ProfilePopover";
 
 const NavBar = ({ reset }: { reset?: () => void }) => {
   const { isAuth } = useAuth();
@@ -24,9 +25,11 @@ const NavBar = ({ reset }: { reset?: () => void }) => {
         </div>
       ) : (
         <div className="mr-5 md:mr-40 flex items-center">
-          <Avatar>
-            <AvatarImage src="/avatar.png" />
-          </Avatar>
+          <ProfilePopover>
+            <Avatar>
+              <AvatarImage src="/avatar.png" />
+            </Avatar>
+          </ProfilePopover>
         </div>
       )}
     </nav>

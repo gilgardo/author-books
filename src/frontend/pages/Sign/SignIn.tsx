@@ -22,6 +22,7 @@ const SignIn = () => {
     },
     mutate
   );
+  console.log(isAuth);
   if (isAuth) return <Navigate to="/" replace />;
 
   return (
