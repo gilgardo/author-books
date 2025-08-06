@@ -4,6 +4,7 @@ import type { Request as JWTRequest } from "express-jwt";
 import type { Response } from "express";
 import prisma from "../prisma";
 import type { Prisma } from "@prisma/client";
+import { maxResults } from "@/data/maxResults";
 
 export const router = Router();
 
@@ -22,19 +23,46 @@ router.get("/libraries", async (req: JWTRequest, res: Response) => {
 router.get("/libraries/id/:id", async (req: JWTRequest, res: Response) => {
   const { id: userId } = req.auth!;
   const libraryId = Number(req.params.id);
-  const libraries = await prisma.library.findMany({
-    where: { userId: Number(userId) },
-    include: {
-      books: true,
+  const page = Number(req.query.page) || 0;
+  const limit = maxResults;
+
+  const library = await prisma.library.findUnique({
+    where: {
+      id: libraryId,
+      userId: Number(userId),
     },
   });
-  const library = libraries.find((lib) => lib.id === libraryId);
+
   if (!library) {
     res.status(404).json({ message: "Library not found" });
     return;
   }
-  res.json(library.books);
+
+  const books = await prisma.book.findMany({
+    where: {
+      libraryId: libraryId,
+    },
+    skip: page * limit,
+    take: limit,
+    orderBy: {
+      title: "asc",
+    },
+  });
+
+  const total = await prisma.book.count({
+    where: {
+      libraryId: libraryId,
+    },
+  });
+
+  res.json({
+    data: books,
+    page,
+    totalPages: Math.ceil(total / limit),
+    totalItems: total,
+  });
 });
+
 router.post("/libraries", async (req: JWTRequest, res: Response) => {
   const { id: userId } = req.auth!;
   const { name } = req.body;

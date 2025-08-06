@@ -10,6 +10,7 @@ import api from "@/utils/api";
 import toast from "react-hot-toast";
 import type { AxiosError, AxiosResponse } from "axios";
 import { getPath } from "@/utils/getPath";
+import { maxResults } from "@/data/maxResults";
 
 export function getLibrariesQueryOptions() {
   return queryOptions({
@@ -17,9 +18,9 @@ export function getLibrariesQueryOptions() {
   });
 }
 
-export function getLibraryQueryOptions(id: string | undefined) {
+export function getLibraryQueryOptions(id: string | undefined, page: number) {
   return queryOptions({
-    ...userkey.libraries._ctx.id(id ? id : ""),
+    ...userkey.libraries._ctx.id(id ? id : "", page),
     enabled: !!id,
   });
 }
@@ -30,15 +31,28 @@ export const useLibrariesSearch = () => {
   });
 };
 
-export const useLibrarySearch = (id: string | undefined) => {
+export const useLibrarySearch = (id: string | undefined, page: number) => {
   const queryClient = useQueryClient();
+
   return useQuery({
-    ...getLibraryQueryOptions(id),
+    ...getLibraryQueryOptions(id, page),
     placeholderData: () => {
       if (!id) return undefined;
-      return queryClient
-        .getQueryData(getLibrariesQueryOptions().queryKey)
-        ?.find((lib) => lib.id.toString() === id)?.books;
+
+      const startIndex = page * maxResults;
+      const endIndex = startIndex + maxResults;
+
+      const libraries = queryClient.getQueryData(
+        getLibrariesQueryOptions().queryKey
+      );
+      const books =
+        libraries?.find((lib) => lib.id.toString() === id)?.books ?? [];
+
+      const data = books.slice(startIndex, endIndex);
+      const totalItems = books.length;
+      const totalPages = Math.ceil(totalItems / maxResults);
+
+      return { data, page, totalPages, totalItems };
     },
   });
 };

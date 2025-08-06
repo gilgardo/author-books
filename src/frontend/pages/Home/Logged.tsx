@@ -32,7 +32,9 @@ const Logged = ({ user }: { user: User }) => {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 auto-rows-fr items-center">
           {libraries?.map((lib) => (
-            <Link key={lib.id + lib.name} to={`/library/${lib.id}`}>
+            <Link
+              key={lib.id + lib.name}
+              to={`/library/${lib.id}?lib=${encodeURIComponent(lib.name)}`}>
               <Card
                 className={`rounded-2xl shadow-sm hover:shadow-xl transition cursor-pointer border border-primary h-full ${
                   lib.id.toString() === id && "bg-secondary/60"
