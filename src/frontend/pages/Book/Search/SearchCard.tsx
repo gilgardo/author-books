@@ -29,7 +29,7 @@ const BookSearchCard = ({
   const workKey = doc.key.replace("/works/", "");
   const editionKey = doc.cover_edition_key ?? "";
   const isReadable = doc.ebook_access === "public";
-
+  console.log(isPlaceholderData && doc);
   const addToLib = (e: React.MouseEvent<HTMLButtonElement>, key: string) => {
     e.stopPropagation();
     setOpen?.(true);
@@ -60,14 +60,16 @@ const BookSearchCard = ({
       </CardHeader>
 
       <CardContent className="flex justify-center items-center px-4">
-        <img
-          className="w-auto h-[10rem] sm:h-[12rem] md:h-[14rem] object-cover rounded-md"
-          src={coverUrlFactory(doc.cover_i ?? undefined, doc.ia?.[0]).M}
-          alt={doc.title}
-        />
+        <div className="w-auto h-[10rem] sm:h-[12rem] md:h-[14rem]">
+          <img
+            className="w-full h-full object-cover rounded-md"
+            src={coverUrlFactory(doc.cover_i ?? undefined, doc.ia?.[0]).M}
+            alt={doc.title}
+          />
+        </div>
       </CardContent>
 
-      <CardFooter className="flex-0">
+      <CardFooter className="flex-0 flex flex-row justify-between items-center">
         {doc.author_name && (
           <p
             className="text-xs text-center text-primary line-clamp-1 w-full"

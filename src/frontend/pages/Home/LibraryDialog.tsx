@@ -57,7 +57,7 @@ export const LibraryDialog = ({ trigger }: { trigger: React.ReactNode }) => {
           />
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="destructive">Cancel</Button>
             </DialogClose>
             <form.AppForm>
               <form.Footer submitLabel="Save" />

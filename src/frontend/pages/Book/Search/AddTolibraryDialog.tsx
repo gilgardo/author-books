@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { useLibrariesSearch, useMutateLibrary } from "../../Home/librariesHook";
 import type { OpenLibrarySearchDoc } from "@/types/openLibrary";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const AddTolibraryDialog = ({
   open,
@@ -39,23 +40,29 @@ export const AddTolibraryDialog = ({
           {isLoading ? (
             <h1>Loading...</h1>
           ) : (
-            <ul>
+            <ScrollArea className="h-[20rem] w-full rounded-md border border-primary/60 p-1 pr-4">
               {libraries?.map((lib) => (
-                <li
+                <div
                   key={lib.id}
-                  className="flex justify-around w-full items-center">
-                  <div>{lib.name}</div>
+                  className="flex justify-between w-full items-center rounded-md bg-primary py-2 px-4 mb-2">
+                  <h4 className="leading-none font-medium text-primary-foreground">
+                    {lib.name}
+                  </h4>
                   <Button
+                    className="cursor-pointer"
+                    variant="secondary"
                     onClick={() => mutate({ book, id: lib.id.toString() })}>
                     Add
                   </Button>
-                </li>
+                </div>
               ))}
-            </ul>
+            </ScrollArea>
           )}
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button className="cursor-pointer" variant="destructive">
+                Cancel
+              </Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>

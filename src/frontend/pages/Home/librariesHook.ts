@@ -68,34 +68,17 @@ export const useMutateLibraries = () => {
         .post(getPath(userkey.libraries.queryKey), { name })
         .then((res: AxiosResponse<LibraryWithBooks>) => res.data),
 
-    onMutate: async ({ name, userId }: { name: string; userId: number }) => {
-      const libQueryKey = getLibrariesQueryOptions().queryKey;
-      await queryClient.cancelQueries(getLibrariesQueryOptions());
-      const prevLibraries = queryClient.getQueryData(libQueryKey);
-
-      const optimisticId = -Date.now();
-      const optimisticLib = { name, userId, id: optimisticId, books: [] };
-      queryClient.setQueryData(libQueryKey, (old) =>
-        old ? [...old, optimisticLib] : [optimisticLib]
-      );
-
-      return { prevLibraries, optimisticId };
-    },
-
-    onError: (error, _, context) => {
+    onError: (error) => {
       const err = error as AxiosError<{ message?: string; type?: string }>;
       const message = err.response?.data?.message ?? err.message;
       toast.error(message);
-      queryClient.setQueryData(
-        getLibrariesQueryOptions().queryKey,
-        context?.prevLibraries
-      );
     },
 
-    onSuccess: (result, _, context) => {
+    onSuccess: (result) => {
       toast.success("library added succesfuly");
-      queryClient.setQueryData(getLibrariesQueryOptions().queryKey, (old) =>
-        old?.map((lib) => (lib.id === context?.optimisticId ? result : lib))
+      queryClient.setQueryData(
+        getLibrariesQueryOptions().queryKey,
+        (old) => old && [...old, result]
       );
     },
 
