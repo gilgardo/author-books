@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -15,15 +16,25 @@ const BookSearchCard = ({
   handleClick,
   handlePrefetch,
   isPlaceholderData,
+  setOpen,
+  setClickedKey,
 }: {
   doc: OpenLibrarySearchDoc | Book;
   handleClick: (workKey: string, editionKey: string) => void;
   handlePrefetch: (workKey: string, editionKey: string) => void;
   isPlaceholderData: boolean;
+  setClickedKey?: React.Dispatch<React.SetStateAction<string>>;
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const workKey = doc.key.replace("/works/", "");
   const editionKey = doc.cover_edition_key ?? "";
   const isReadable = doc.ebook_access === "public";
+
+  const addToLib = (e: React.MouseEvent<HTMLButtonElement>, key: string) => {
+    e.stopPropagation();
+    setOpen?.(true);
+    setClickedKey?.(key);
+  };
 
   return (
     <Card
@@ -63,6 +74,9 @@ const BookSearchCard = ({
             title={doc.author_name.join(", ")}>
             {doc.author_name.join(", ")}
           </p>
+        )}
+        {setOpen && setClickedKey && (
+          <Button onClick={(e) => addToLib(e, doc.key)}>Add To Library</Button>
         )}
       </CardFooter>
     </Card>

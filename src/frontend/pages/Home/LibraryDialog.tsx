@@ -10,12 +10,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import useAddLibForm from "./useAddLibForm";
-import { useMutateLibrary } from "./librariesHook";
+import { useMutateLibraries } from "./librariesHook";
 import { useState } from "react";
 
 export const LibraryDialog = ({ trigger }: { trigger: React.ReactNode }) => {
   const [open, setOpen] = useState(false);
-  const { mutate } = useMutateLibrary();
+  const { mutate } = useMutateLibraries();
   const form = useAddLibForm({ name: "" }, (value) => {
     mutate(value, {
       onSuccess: () => {

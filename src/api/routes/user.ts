@@ -3,8 +3,9 @@ import { requireAuth } from "../auth/auth";
 import type { Request as JWTRequest } from "express-jwt";
 import type { Response } from "express";
 import prisma from "../prisma";
-import type { Prisma } from "@prisma/client";
 import { maxResults } from "@/data/maxResults";
+import type { OpenLibrarySearchDoc } from "@/types/openLibrary";
+import { OpenLibrarySearchDocSchema } from "@/frontend/zodSchema/OpenLibrarySearchDocSchema";
 
 export const router = Router();
 
@@ -98,7 +99,7 @@ router.post("/libraries", async (req: JWTRequest, res: Response) => {
 router.post("/libraries/id/:id", async (req: JWTRequest, res: Response) => {
   const { id: userId } = req.auth!;
   const libraryId = Number(req.params.id);
-  const { book }: { book: Prisma.BookCreateInput } = req.body;
+  const { book }: { book: OpenLibrarySearchDoc } = req.body;
 
   if (!book) {
     res.status(400).json({ message: "Missing or invalid body" });
@@ -114,8 +115,18 @@ router.post("/libraries/id/:id", async (req: JWTRequest, res: Response) => {
     return;
   }
 
+  let cleanedBook: OpenLibrarySearchDoc | undefined;
+
+  try {
+    cleanedBook = OpenLibrarySearchDocSchema.parse(book);
+  } catch (err) {
+    console.log(book, err);
+    res.status(400).json({ message: "Invalid book data", error: err });
+    return;
+  }
+  if (!cleanedBook) return;
   const createdBook = await prisma.book.create({
-    data: { ...book, library: { connect: { id: libraryId } } },
+    data: { ...cleanedBook, library: { connect: { id: libraryId } } },
   });
 
   res.status(201).json(createdBook);

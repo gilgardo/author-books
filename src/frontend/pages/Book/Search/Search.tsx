@@ -10,6 +10,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import books from "../bookKeys";
 import { getWorkQueryOptions } from "../Dettails/useWorkSearch";
 import { getEditionQueryOptions } from "../Dettails/useEditionSearch";
+import { useState } from "react";
+import AddTolibraryDialog from "./AddTolibraryDialog";
 
 const BooksSearch = () => {
   const [searchParams] = useSearchParams();
@@ -19,7 +21,10 @@ const BooksSearch = () => {
   const { data, isPending, isPlaceholderData } = useDocsSearch(query, page);
   const maxPage = Math.min(Math.ceil((data?.numFound ?? 0) / maxResults), 100);
   const queryClient = useQueryClient();
-  console.log(page, maxPage);
+  const [open, setOpen] = useState(false);
+  const [clickedKey, setClickedKey] = useState("");
+  const clikedBook =
+    data?.docs.find((doc) => doc.key === clickedKey) ?? data?.docs[0];
 
   const handleClick = (workKey: string, editionKey: string) =>
     navigateToBookDetails({
@@ -57,16 +62,26 @@ const BooksSearch = () => {
                 handleClick={handleClick}
                 handlePrefetch={handlePrefetch}
                 isPlaceholderData={isPlaceholderData}
+                setOpen={setOpen}
+                setClickedKey={setClickedKey}
               />
             ))}
       </div>
-
       {data && (
-        <PageNavigation
-          page={page}
-          maxPage={maxPage}
-          searchParams={searchParams}
-        />
+        <>
+          {clikedBook && (
+            <AddTolibraryDialog
+              open={open}
+              setOpen={setOpen}
+              book={clikedBook}
+            />
+          )}
+          <PageNavigation
+            page={page}
+            maxPage={maxPage}
+            searchParams={searchParams}
+          />
+        </>
       )}
     </>
   );

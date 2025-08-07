@@ -23,6 +23,10 @@ const userkey = createQueryKeys("user", {
         queryKey: [id, { page }],
         queryFn: defaultFn<BooksResponse>,
       }),
+      postId: (id: string) => ({
+        queryKey: [id],
+        queryFn: null,
+      }),
     },
   },
 });
