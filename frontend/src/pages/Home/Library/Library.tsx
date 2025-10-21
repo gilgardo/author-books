@@ -38,7 +38,7 @@ const Library = () => {
   console.log("isPlaceholderData:", isPlaceholderData);
   console.log("booksResults:", booksResults);
   return (
-    <div className="w-full mt-5">
+    <div className="w-full mt-5 self-start">
       {isPending ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 auto-rows-[1fr]">
           {Array.from({ length: 12 }).map((_, i) => (
@@ -46,7 +46,7 @@ const Library = () => {
           ))}
         </div>
       ) : booksResults?.data.length === 0 ? (
-        <div className=" mb-auto">
+        <div>
           <h3 className="text-lg font-semibold text-gray-600">
             No books found in
             {libraryName ? (

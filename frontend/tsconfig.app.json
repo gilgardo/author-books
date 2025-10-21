@@ -27,5 +27,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "prisma"]
+  "include": ["src", "prisma", "frontend/src/utils"]
 }
