@@ -2,7 +2,7 @@
   "name": "author-books",
   "private": true,
   "scripts": {
-    "dev": "pnpm run --parallel dev:api dev:web",
+    "dev": "pnpm run dev:api & pnpm run dev:web",
     "dev:api": "pnpm --filter @author-books/api dev",
     "dev:web": "pnpm --filter frontend dev",
     "build": "pnpm run build:shared && pnpm run build:api && pnpm run build:web",
