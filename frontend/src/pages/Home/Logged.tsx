@@ -7,11 +7,11 @@ import { Link, Outlet, useParams } from "react-router-dom";
 
 const Logged = ({ user }: { user: User }) => {
   const { id } = useParams();
-  console.log("logged");
   const { data: libraries, isLoading } = useLibrariesSearch();
 
   if (isLoading) return <div>Loading libraries...</div>;
-
+  console.log(libraries);
+  if (!libraries) return;
   return (
     <div className="w-full h-full flex flex-col items-start justify-center">
       <div className="rounded-2xl shadow-md p-4 bg-accent/60 border border-primary mx-auto mb-auto w-full">
@@ -30,26 +30,28 @@ const Logged = ({ user }: { user: User }) => {
           />
         </header>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 auto-rows-fr items-center">
-          {libraries?.map((lib) => (
-            <Link
-              key={lib.id + lib.name}
-              to={`/library/${lib.id}?lib=${encodeURIComponent(lib.name)}`}>
-              <Card
-                className={`rounded-2xl shadow-sm hover:shadow-xl transition cursor-pointer border border-primary h-full ${
-                  lib.id.toString() === id && "bg-secondary/60"
-                }`}>
-                <CardHeader className="p-3">
-                  <CardTitle
-                    className="text-xl font-semibold text-primary line-clamp-2 text-center"
-                    title={lib.name}>
-                    {lib.name}
-                  </CardTitle>
-                </CardHeader>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        {libraries && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 auto-rows-fr items-center">
+            {libraries?.map((lib) => (
+              <Link
+                key={lib.id + lib.name}
+                to={`/library/${lib.id}?lib=${encodeURIComponent(lib.name)}`}>
+                <Card
+                  className={`rounded-2xl shadow-sm hover:shadow-xl transition cursor-pointer border border-primary h-full ${
+                    lib.id.toString() === id && "bg-secondary/60"
+                  }`}>
+                  <CardHeader className="p-3">
+                    <CardTitle
+                      className="text-xl font-semibold text-primary line-clamp-2 text-center"
+                      title={lib.name}>
+                      {lib.name}
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
       <Outlet />
     </div>
