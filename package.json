@@ -2,12 +2,13 @@
   "name": "author-books",
   "private": true,
   "scripts": {
-    "build:web": "tsc -p apps/web/tsconfig.json",
+    "build:web": "pnpm --filter frontend typecheck",
     "build:api": "tsc -p apps/api/tsconfig.json"
   },
   "workspaces": [
     "packages/*",
-    "apps/*"
+    "apps/*",
+    "frontend"
   ],
   "devDependencies": {
     "typescript": "^5.6.0",

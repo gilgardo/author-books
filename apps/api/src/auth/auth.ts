@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { signUp } from "./signUpController";
+import { signUp } from "./signUpController.js";
 import { expressjwt, type Request as JWTRequest } from "express-jwt";
 import csrf from "csurf";
-import { signIn } from "./signInController";
+import { signIn } from "./signInController.js";
 import type { Request, Response } from "express";
 import dotenv from "dotenv";
 
