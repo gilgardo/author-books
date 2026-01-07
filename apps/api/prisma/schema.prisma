@@ -1,0 +1,74 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  userName String
+  password String
+  libraries Library[]
+}
+
+model Library {
+  id      Int    @id @default(autoincrement())
+  name    String
+  userId  Int
+  user    User   @relation(fields: [userId], references: [id])
+  books   Book[] 
+  @@unique([userId, name])
+}
+
+model Book {
+  key                   String   @id
+  title                 String
+  libraryId             Int
+  cover_edition_key     String?  // from `cover_edition_key`
+  author_name           String[] // from `author_name`
+  author_key            String[] // from `author_key`
+  ebook_access          EbookAccess?  // enum or raw string, from `ebook_access`
+  edition_count         Int
+  first_publish_year    Int?     // optional number
+  has_fulltext          Boolean
+  ia                    String[] // from `ia`
+  ia_collection_s       String?  // optional single string
+  language              String[] // optional array of strings
+  lending_edition_s     String?  // optional
+  lending_identifier_s  String?  // optional
+  public_scan_b         Boolean
+  cover_i               Int?     // optional
+  library               Library  @relation(fields: [libraryId], references: [id])
+}
+
+
+enum EbookAccess {
+  borrowable
+  public
+}
+
+
+// export interface OpenLibrarySearchDoc {
+//   author_key: string[];
+//   author_name: string[];
+//   cover_edition_key?: string;
+//   cover_i?: number;
+//   ebook_access?: "borrowable" | "public";
+//   edition_count: number;
+//   first_publish_year?: number;
+//   has_fulltext: boolean;
+//   ia?: string[];
+//   ia_collection_s?: string;
+//   key: string;
+//   language?: string[];
+//   lending_edition_s?: string;
+//   lending_identifier_s?: string;
+//   public_scan_b: boolean;
+//   title: string;
+// }
