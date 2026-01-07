@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { Request, Response } from "express";
-import { maxResults } from "@/data/maxResults";
+import { maxResults } from "../data/maxResults";
 import { openlibraryProxyHandler, type Params } from "../utils/proxieHandler";
 
 const WORK_URL = "https://openlibrary.org/works";

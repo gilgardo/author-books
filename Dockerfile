@@ -2,15 +2,15 @@ FROM node:alpine
 
 WORKDIR /app
 
-COPY package.json ./
+COPY api/package.json ./
 
 RUN npm install
 
-COPY . .
+COPY api/ .
 
 RUN npx prisma generate
 
 EXPOSE 3000
 
-CMD [ "npx", "tsx", "src/api/server.ts" ]
+CMD [ "npx", "tsx", "server.ts" ]
 

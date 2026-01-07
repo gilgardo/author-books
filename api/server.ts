@@ -1,6 +1,6 @@
 import express from "express";
 import { router as bookRouter } from "./src/routes/book.ts";
-import { router as authRouter } from "./auth/auth.ts";
+import { router as authRouter } from "./src/auth/auth.ts";
 import { router as userRouter } from "./src/routes/user.ts";
 import type { NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";

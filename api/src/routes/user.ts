@@ -3,9 +3,9 @@ import { requireAuth } from "../auth/auth";
 import type { Request as JWTRequest } from "express-jwt";
 import type { Response } from "express";
 import prisma from "../../prisma";
-import { maxResults } from "@/data/maxResults";
-import type { OpenLibrarySearchDoc } from "@/types/openLibrary";
-import { OpenLibrarySearchDocSchema } from "@/frontend/zodSchema/OpenLibrarySearchDocSchema";
+import { maxResults } from "../data/maxResults";
+import type { OpenLibrarySearchDoc } from "../types/openLibrary";
+import { OpenLibrarySearchDocSchema } from "../zodSchema/OpenLibrarySearchDocSchema";
 
 export const router = Router();
 

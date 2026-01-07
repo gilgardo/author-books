@@ -1,4 +1,4 @@
-import { useAppForm } from "@/frontend/components/form/useAppForm";
+import { useAppForm } from "@/components/form/useAppForm";
 import type { SignInUser, SignUpUser } from "@/types/user";
 
 const useSignForm = (

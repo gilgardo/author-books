@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import prisma from "../prisma";
+import prisma from "../../prisma";
 import bcrypt from "bcryptjs";
 
 import signJwtAndSetCookie from "./signJwtAndSetCookie";
