@@ -40,7 +40,7 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   if (!config.isProduction) {
     console.log(`Server running on port ${PORT}`);

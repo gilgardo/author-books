@@ -14,6 +14,7 @@ const sign = async ({
   path: "signUp" | "signIn";
 }) => {
   const url = getPath(authkeys[path].queryKey);
+  console.log(url);
   const res = await api.post(url, userData);
   return res.data as AuthedUser;
 };
