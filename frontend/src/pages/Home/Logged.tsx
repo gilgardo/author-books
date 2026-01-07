@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus } from "lucide-react";
 import { useLibrariesSearch } from "./librariesHook";
-import type { User } from "@/frontend/auth/authContext";
+import type { User } from "@/auth/authContext";
 import LibraryDialog from "./LibraryDialog";
 import { Link, Outlet, useParams } from "react-router-dom";
 

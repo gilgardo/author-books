@@ -3,15 +3,16 @@ import { router as bookRouter } from "./routes/book.js";
 import { router as authRouter } from "./auth/auth.js";
 import { router as userRouter } from "./routes/user.js";
 import type { NextFunction, Request, Response } from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import csrf from "csurf";
-dotenv.config();
+import { config } from "./config/env.js";
+
 const app = express();
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: config.corsOrigin,
     credentials: true,
   })
 );
@@ -20,18 +21,28 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use("/api/book", bookRouter);
-app.use("/api/auth", authRouter);
 const csrfProtection = csrf({
   cookie: true,
 });
 
+app.use("/api/book", bookRouter);
+app.use("/api/auth", authRouter);
 app.use("/api/user", csrfProtection, userRouter);
-app.use((err: Error, _: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Something went wrong" });
-  next();
+
+// Error handler - must be last middleware
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  if (config.isProduction) {
+    res.status(500).json({ error: "Something went wrong" });
+  } else {
+    console.error(err.stack);
+    res.status(500).json({ error: err.message, stack: err.stack });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  if (!config.isProduction) {
+    console.log(`Server running on port ${PORT}`);
+  }
+});

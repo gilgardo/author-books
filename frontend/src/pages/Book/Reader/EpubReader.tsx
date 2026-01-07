@@ -1,5 +1,5 @@
 import { type FC, useEffect, useState } from "react";
-import Epub, { Book, Rendition } from "epubjs";
+import { Book, Rendition } from "epubjs";
 import Navigator from "./Navigator";
 import LoadingIndicator from "./LoadingIndicator";
 import TableOfContent, { type BookNavList } from "./TableOfContent";

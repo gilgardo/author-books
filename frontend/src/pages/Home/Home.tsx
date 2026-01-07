@@ -1,4 +1,4 @@
-import { useAuth } from "@/frontend/auth/useAuth";
+import { useAuth } from "@/auth/useAuth";
 import Logged from "./Logged";
 
 const Home = () => {

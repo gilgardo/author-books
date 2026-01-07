@@ -4,10 +4,7 @@ import { expressjwt, type Request as JWTRequest } from "express-jwt";
 import csrf from "csurf";
 import { signIn } from "./signInController.js";
 import type { Request, Response } from "express";
-import dotenv from "dotenv";
-
-dotenv.config();
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
+import { config } from "../config/env.js";
 
 export const router = Router();
 
@@ -19,14 +16,14 @@ const getTokenFromCookie = (req: Request) => {
 };
 
 export const optionalAuth = expressjwt({
-  secret: JWT_SECRET,
+  secret: config.jwtSecret,
   algorithms: ["HS256"],
   getToken: getTokenFromCookie,
   credentialsRequired: false,
 });
 
 export const requireAuth = expressjwt({
-  secret: JWT_SECRET,
+  secret: config.jwtSecret,
   algorithms: ["HS256"],
   getToken: getTokenFromCookie,
   credentialsRequired: true,
@@ -46,15 +43,14 @@ const csrfProtection = csrf({
 router.use(csrfProtection);
 
 router.get("/csrf_token", csrfProtection, (req, res) => {
-  console.log(req.csrfToken());
   res.json({ csrfToken: req.csrfToken() });
 });
 
 router.post("/logout", requireAuth, (_, res: Response) => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    secure: config.isProduction,
+    sameSite: config.isProduction ? "none" : "lax",
   });
   res.status(200).json({ message: "Logged out successfully" });
 });

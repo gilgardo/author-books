@@ -1,5 +1,5 @@
-import { useAuth } from "@/frontend/auth/useAuth";
-import { useAppForm } from "@/frontend/components/form/useAppForm";
+import { useAuth } from "@/auth/useAuth";
+import { useAppForm } from "@/components/form/useAppForm";
 
 const useAddLibForm = (
   defaultName = { name: "" },

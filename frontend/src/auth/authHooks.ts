@@ -46,7 +46,7 @@ export const useLogging = () => {
 export const useLoggOut = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: () => api.post("user/logout"),
+    mutationFn: () => api.post("auth/logout"),
     onSuccess: () => queryClient.invalidateQueries(authkeys.me),
     onError: (error) => toast.error(error.message),
   });

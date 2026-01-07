@@ -5,8 +5,8 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { useLoggOut } from "@/frontend/auth/authHooks";
-import { useAuth } from "@/frontend/auth/useAuth";
+import { useLoggOut } from "@/auth/authHooks";
+import { useAuth } from "@/auth/useAuth";
 import {
   Popover,
   PopoverContent,

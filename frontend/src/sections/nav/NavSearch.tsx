@@ -1,13 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { useDebounce } from "@uidotdev/usehooks";
-import { toggle } from "../../../utils/toggleBolean";
-import { useDocsSearch } from "../../pages/Book/Search/useDocsSearch";
-import type {
-  BookDetailsParams,
-  BooksSearchParams,
-} from "../../../types/params";
-import { useNavigateToParams } from "../../customHooks/useNavigateToParams";
+import { toggle } from "@/utils/toggleBolean";
+import { useDocsSearch } from "@/pages/Book/Search/useDocsSearch";
+import type { BookDetailsParams, BooksSearchParams } from "@/types/params";
+import { useNavigateToParams } from "@/customHooks/useNavigateToParams";
 import clsx from "clsx";
 import coverUrlFactory from "@/utils/coverUrlFactory";
 import { Input } from "@/components/ui/input";

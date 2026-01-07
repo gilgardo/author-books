@@ -1,11 +1,16 @@
 import type { FallbackProps } from "react-error-boundary";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
+
+interface CustomError extends Error {
+  type?: string;
+}
 
 const ViewerFallback = ({ error }: FallbackProps) => {
   const navigate = useNavigate();
+  const customError = error as CustomError;
 
   const onClick =
-    error.type === "id" ? () => navigate(-1) : window.location.reload;
+    customError.type === "id" ? () => navigate(-1) : window.location.reload;
   return (
     <div className="p-6 bg-red-100 text-red-800 rounded-xl max-w-md mx-auto mt-10 shadow-md">
       <h2 className="text-lg font-semibold mb-2">Something went wrong</h2>

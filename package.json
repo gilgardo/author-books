@@ -2,8 +2,13 @@
   "name": "author-books",
   "private": true,
   "scripts": {
-    "build:web": "pnpm --filter frontend typecheck",
-    "build:api": "tsc -p apps/api/tsconfig.json"
+    "dev": "pnpm run --parallel dev:api dev:web",
+    "dev:api": "pnpm --filter @author-books/api dev",
+    "dev:web": "pnpm --filter frontend dev",
+    "build": "pnpm run build:shared && pnpm run build:api && pnpm run build:web",
+    "build:shared": "pnpm --filter @author-books/shared build",
+    "build:api": "tsc -p apps/api/tsconfig.json",
+    "build:web": "pnpm --filter frontend build"
   },
   "workspaces": [
     "packages/*",

@@ -1,11 +1,11 @@
 import { useSearchParams } from "react-router-dom";
 
 import { maxResults } from "@/data/maxResults.ts";
-import { useNavigateToParams } from "@/frontend/customHooks/useNavigateToParams";
+import { useNavigateToParams } from "@/customHooks/useNavigateToParams";
 import CardLoader from "./CardLoader";
 import SearchCard from "./SearchCard";
 import { useDocsSearch } from "./useDocsSearch";
-import PageNavigation from "@/frontend/components/PageNavigation";
+import PageNavigation from "@/components/PageNavigation";
 import { useQueryClient } from "@tanstack/react-query";
 import books from "../bookKeys";
 import { getWorkQueryOptions } from "../Dettails/useWorkSearch";

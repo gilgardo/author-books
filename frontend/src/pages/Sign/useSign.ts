@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { getPath } from "@/utils/getPath";
-import authkeys from "@/frontend/auth/authKeys";
+import authkeys from "@/auth/authKeys";
 
 const sign = async ({
   userData,

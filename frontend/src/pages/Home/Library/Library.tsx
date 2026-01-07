@@ -2,7 +2,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { useLibrarySearch } from "../librariesHook";
 import SearchCard from "../../Book/Search/SearchCard";
 import CardLoader from "../../Book/Search/CardLoader";
-import { useNavigateToParams } from "@/frontend/customHooks/useNavigateToParams";
+import { useNavigateToParams } from "@/customHooks/useNavigateToParams";
 import { getWorkQueryOptions } from "../../Book/Dettails/useWorkSearch";
 import { useQueryClient } from "@tanstack/react-query";
 import { getEditionQueryOptions } from "../../Book/Dettails/useEditionSearch";
